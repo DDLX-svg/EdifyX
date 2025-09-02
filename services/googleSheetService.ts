@@ -1,4 +1,3 @@
-
 import { parseCSV } from '../utils/csvParser.ts';
 import type { AnatomyQuestion, MedicalQuestion, Account, DocumentData, AnyQuestion, ScientificArticle } from '../types.ts';
 
@@ -97,6 +96,7 @@ export const fetchAccounts = async (): Promise<Account[]> => {
   const rawAccounts = await fetchData<any>('Accounts'); 
   return rawAccounts.map((acc: any) => ({
     ...acc,
+    'Tuổi': parseInt(acc['Tuổi'] || '0', 10) || 0,
     'Tổng số câu hỏi đã làm': parseInt(acc['Tổng số câu hỏi đã làm'] || '0', 10) || 0,
     'Tổng số câu hỏi đã làm đúng': parseInt(acc['Tổng số câu hỏi đã làm đúng'] || '0', 10) || 0,
     'Tổng số câu hỏi đã làm trong tuần': parseInt(acc['Tổng số câu hỏi đã làm trong tuần'] || '0', 10) || 0,
@@ -158,40 +158,20 @@ export const fetchArticles = async (): Promise<ScientificArticle[]> => {
 };
 
 
-export const registerUser = async (userData: Pick<Account, 'Tên tài khoản' | 'Email' | 'Mật khẩu'>): Promise<{ success: boolean; error?: string }> => {
+export const registerUser = async (userData: Pick<Account, 'Tên tài khoản' | 'Email' | 'Mật khẩu' | 'Tuổi' | 'Vai trò'>): Promise<{ success: boolean; error?: string }> => {
     try {
         const result = await postToAppsScript({
             action: 'registerUser',
             username: userData['Tên tài khoản'],
             email: userData.Email,
-            password: userData['Mật khẩu']
+            password: userData['Mật khẩu'],
+            age: userData['Tuổi'],
+            role: userData['Vai trò']
         });
         if (result.status === 'success') {
             return { success: true };
         }
         return { success: false, error: result.message || 'Lỗi không xác định từ máy chủ.' };
-    } catch (error: any) {
-        return { success: false, error: error.message };
-    }
-};
-
-export const addDocument = async (docData: Omit<DocumentData, 'uploader' | 'uploadDate'>, uploader: string, uploadDate: string): Promise<{ success: boolean; error?: string }> => {
-    try {
-        const result = await postToAppsScript({
-            action: 'addDocument',
-            'Tiêu đề': docData.title,
-            'Tác giả': docData.author,
-            'Danh mục': docData.category,
-            '# Số trang': docData.pages,
-            'URL Hình ảnh': docData.imageUrl,
-            'URL Tài liệu': docData.documentUrl,
-            'Người đăng': uploader,
-            'Ngày đăng': uploadDate,
-        });
-        if (result.status === 'success') {
-            return { success: true };
-        }
-        return { success: false, error: result.message || 'An unknown error occurred while adding the document.' };
     } catch (error: any) {
         return { success: false, error: error.message };
     }

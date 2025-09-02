@@ -1,11 +1,9 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from './shared/Icon.tsx';
-import AddDocumentForm from './admin/AddDocumentForm.tsx';
 import AddQuestionForm from './admin/AddQuestionForm.tsx';
 import { useAuth } from '../contexts/AuthContext.tsx';
-import { addDocument, fetchDocuments, fetchAllQuestions, fetchArticles, updateArticleStatus, updateArticleFeedback } from '../services/googleSheetService.ts';
+import { fetchDocuments, fetchAllQuestions, fetchArticles, updateArticleStatus, updateArticleFeedback } from '../services/googleSheetService.ts';
 import type { DocumentData, AnyQuestion, ScientificArticle } from '../types.ts';
 
 type SortDirection = 'ascending' | 'descending';
@@ -119,7 +117,6 @@ const FeedbackModal: React.FC<{
 
 const Admin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'documents' | 'questions' | 'articles'>('documents');
-  const [isAddDocumentModalOpen, setIsAddDocumentModalOpen] = useState(false);
   const [isAddQuestionModalOpen, setIsAddQuestionModalOpen] = useState(false);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const [currentArticleForFeedback, setCurrentArticleForFeedback] = useState<ScientificArticle | null>(null);
@@ -198,22 +195,6 @@ const Admin: React.FC = () => {
     };
     loadData();
   }, []);
-
-  const handleSaveDocument = async (docData: Omit<DocumentData, 'uploader' | 'uploadDate'>) => {
-    if (!currentUser) throw new Error('Bạn phải đăng nhập để thực hiện hành động này.');
-    const now = new Date();
-    const formattedDate = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-    const uploaderName = currentUser['Tên tài khoản'];
-
-    const result = await addDocument(docData, uploaderName, formattedDate);
-    if (result.success) {
-      const newDocumentForUI: DocumentData = { ...docData, uploader: uploaderName, uploadDate: formattedDate };
-      setDocuments(prev => [newDocumentForUI, ...prev]);
-      setIsAddDocumentModalOpen(false);
-    } else {
-      throw new Error(result.error || 'Đã xảy ra lỗi không xác định.');
-    }
-  };
 
   const handleSaveQuestion = (data: any) => {
     console.log('Saving question:', data);
@@ -646,12 +627,6 @@ const Admin: React.FC = () => {
         </div>
       </div>
       
-      {isAddDocumentModalOpen && (
-        <AddDocumentForm
-          onClose={() => setIsAddDocumentModalOpen(false)}
-          onSave={handleSaveDocument}
-        />
-      )}
       {isAddQuestionModalOpen && (
         <AddQuestionForm
           onClose={() => setIsAddQuestionModalOpen(false)}

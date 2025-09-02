@@ -45,11 +45,12 @@ const AppContent: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           
+          {/* Publicly Accessible Routes */}
+          <Route path="/documents" element={<Documents />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/guide" element={<Guide />} />
+
           {/* Protected Routes */}
-          <Route 
-            path="/documents" 
-            element={currentUser ? <Documents /> : <Navigate to="/login" />} 
-          />
            <Route 
             path="/articles" 
             element={currentUser ? <Articles /> : <Navigate to="/login" />} 
@@ -75,20 +76,12 @@ const AppContent: React.FC = () => {
             element={currentUser ? <MedicalQuiz /> : <Navigate to="/login" />} 
           />
           <Route 
-            path="/leaderboard" 
-            element={currentUser ? <Leaderboard /> : <Navigate to="/login" />} 
-          />
-          <Route 
             path="/challenge-quiz" 
             element={currentUser ? <ChallengeQuiz /> : <Navigate to="/login" />} 
           />
            <Route 
             path="/profile/:email" 
             element={currentUser ? <Profile /> : <Navigate to="/login" />} 
-          />
-           <Route 
-            path="/guide" 
-            element={currentUser ? <Guide /> : <Navigate to="/login" />} 
           />
           <Route 
             path="/publications" 

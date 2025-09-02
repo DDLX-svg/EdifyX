@@ -18,7 +18,9 @@ interface AuthContextType {
   register: (
     username: string,
     email: string,
-    pass: string
+    pass: string,
+    age: number,
+    role: string
   ) => Promise<{ success: boolean; error?: string }>;
   resendVerificationEmail: (email: string) => Promise<{ success: boolean; error?: string }>;
   updateUserStats: (attempted: number, correct: number) => void;
@@ -119,7 +121,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     sessionStorage.removeItem('currentUser');
   };
 
-  const register = async (username: string, email: string, pass: string) => {
+  const register = async (username: string, email: string, pass: string, age: number, role: string) => {
     try {
         const accounts = await fetchAccounts();
         const userExists = accounts.some(acc => acc.Email.toLowerCase() === email.toLowerCase());
@@ -131,6 +133,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             'Tên tài khoản': username,
             Email: email,
             'Mật khẩu': pass,
+            'Tuổi': age,
+            'Vai trò': role as any,
         });
 
       return response;

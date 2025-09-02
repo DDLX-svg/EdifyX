@@ -1,3 +1,4 @@
+
 export interface AnatomyQuestion {
   ID: string;
   Image_URL: string;
@@ -30,6 +31,8 @@ export interface Account {
   'Gói đăng ký': string;
   'Danh hiệu': 'Admin' | 'Developer' | 'User' | string;
   'Đã xác minh': 'Có' | 'Không' | string;
+  'Tuổi'?: number;
+  'Vai trò'?: 'Sinh viên' | 'Nhà nghiên cứu tự do' | 'Học sinh' | 'Nhà báo (nhà tuyển dụng)';
   // Columns G-J as numbers
   'Tổng số câu hỏi đã làm': number;
   'Tổng số câu hỏi đã làm đúng': number;

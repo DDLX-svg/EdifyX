@@ -4,15 +4,48 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.tsx';
 import { Icon } from './shared/Icon.tsx';
 
+const PasswordCriterion: React.FC<{ met: boolean; text: string }> = ({ met, text }) => (
+    <li className={`flex items-center text-sm transition-colors ${met ? 'text-green-600' : 'text-gray-500'}`}>
+        <Icon name={met ? 'check-circle' : 'x-circle'} className={`w-4 h-4 mr-2 flex-shrink-0 ${met ? 'text-green-500' : 'text-gray-400'}`} />
+        {text}
+    </li>
+);
+
 const Register: React.FC = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [age, setAge] = useState('');
+  const [role, setRole] = useState('Học sinh');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [passwordCriteria, setPasswordCriteria] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    specialChar: false,
+  });
   const { register } = useAuth();
   const navigate = useNavigate();
+
+  const validatePassword = (pass: string) => {
+    const length = pass.length >= 8;
+    const uppercase = /[A-Z]/.test(pass);
+    const lowercase = /[a-z]/.test(pass);
+    const number = /[0-9]/.test(pass);
+    const specialChar = /[!@#$%^&*(),.?":{}|<>]/.test(pass);
+
+    setPasswordCriteria({ length, uppercase, lowercase, number, specialChar });
+    return length && uppercase && lowercase && number && specialChar;
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    validatePassword(newPassword);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,13 +55,20 @@ const Register: React.FC = () => {
       setError('Mật khẩu xác nhận không khớp.');
       return;
     }
-    if (password.length < 6) {
-        setError('Mật khẩu phải có ít nhất 6 ký tự.');
+
+    const isPasswordStrong = validatePassword(password);
+    if (!isPasswordStrong) {
+        setError('Mật khẩu không đủ mạnh. Vui lòng đáp ứng tất cả các tiêu chí.');
+        return;
+    }
+    
+    if (!age || parseInt(age) < 3) {
+        setError('Tuổi không hợp lệ. Bạn phải ít nhất 3 tuổi.');
         return;
     }
 
     setLoading(true);
-    const result = await register(username, email, password);
+    const result = await register(username, email, password, parseInt(age, 10), role);
     setLoading(false);
 
     if (result.success) {
@@ -60,40 +100,78 @@ const Register: React.FC = () => {
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-4" onSubmit={handleSubmit} noValidate>
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
               <span>{error}</span>
             </div>
           )}
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <input name="username" type="text" required
-                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          <div className="rounded-md shadow-sm space-y-4">
+             <div>
+              <label htmlFor="username" className="sr-only">Tên tài khoản</label>
+              <input id="username" name="username" type="text" required
+                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 placeholder="Tên tài khoản"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div>
-              <input name="email" type="email" autoComplete="email" required
-                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              <label htmlFor="email" className="sr-only">Email</label>
+              <input id="email" name="email" type="email" autoComplete="email" required
+                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 placeholder="Địa chỉ email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div>
-              <input name="password" type="password" required
-                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Mật khẩu"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+             <div>
+              <label htmlFor="age" className="sr-only">Tuổi</label>
+              <input id="age" name="age" type="number" required
+                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="Tuổi"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
               />
+              <p className="mt-2 text-xs text-gray-500 px-1">
+                Nên điền tuổi thật vì trang web mở cho cả trẻ 3 tuổi, có cơ hội được các trường đại học top đầu như VinUni để ý tới.
+              </p>
+            </div>
+             <div>
+              <label htmlFor="role" className="sr-only">Bạn là</label>
+              <select id="role" name="role" required
+                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <option value="Học sinh">Học sinh</option>
+                <option value="Sinh viên">Sinh viên</option>
+                <option value="Nhà nghiên cứu tự do">Nhà nghiên cứu tự do</option>
+                <option value="Nhà báo (nhà tuyển dụng)">Nhà báo (nhà tuyển dụng)</option>
+              </select>
             </div>
             <div>
-              <input name="confirm-password" type="password" required
-                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              <label htmlFor="password" className="sr-only">Mật khẩu</label>
+              <input id="password" name="password" type="password" required
+                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="Mật khẩu"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+            </div>
+             <div className="pt-2 px-1">
+                <ul className="space-y-1">
+                    <PasswordCriterion met={passwordCriteria.length} text="Ít nhất 8 ký tự" />
+                    <PasswordCriterion met={passwordCriteria.lowercase} text="Một chữ cái viết thường (a-z)" />
+                    <PasswordCriterion met={passwordCriteria.uppercase} text="Một chữ cái viết hoa (A-Z)" />
+                    <PasswordCriterion met={passwordCriteria.number} text="Một chữ số (0-9)" />
+                    <PasswordCriterion met={passwordCriteria.specialChar} text="Một ký tự đặc biệt (!@#$...)" />
+                </ul>
+            </div>
+            <div>
+              <label htmlFor="confirm-password" className="sr-only">Xác nhận mật khẩu</label>
+              <input id="confirm-password" name="confirm-password" type="password" required
+                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 placeholder="Xác nhận mật khẩu"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -101,7 +179,7 @@ const Register: React.FC = () => {
             </div>
           </div>
 
-          <div>
+          <div className="pt-2">
             <button
               type="submit"
               disabled={loading}
