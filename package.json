@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "An interactive learning platform for medical students and professionals, offering document sharing, anatomy station simulations, and comprehensive medical quizzes.",
   "scripts": {
-    "build": "tailwindcss -i ./styles.css -o ./public/output.css"
+    "build": "tailwindcss -i ./styles.css -o ./output.css"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.1"
