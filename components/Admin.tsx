@@ -4,7 +4,7 @@ import { Icon } from './shared/Icon';
 import AddDocumentForm from './admin/AddDocumentForm';
 import AddQuestionForm from './admin/AddQuestionForm';
 import { useAuth } from '../contexts/AuthContext';
-import { addDocument, fetchDocuments, fetchAllQuestions, fetchArticles, updateArticleStatus } from '../services/googleSheetService';
+import { addDocument, fetchDocuments, fetchAllQuestions, fetchArticles, updateArticleStatus, updateArticleFeedback } from '../services/googleSheetService';
 import type { DocumentData, AnyQuestion, ScientificArticle } from '../types';
 
 type SortDirection = 'ascending' | 'descending';
@@ -74,11 +74,54 @@ const Pagination: React.FC<{
     )
 }
 
+const FeedbackModal: React.FC<{
+  article: ScientificArticle;
+  onClose: () => void;
+  onSave: (articleId: string, feedback: string) => Promise<void>;
+}> = ({ article, onClose, onSave }) => {
+    const [feedback, setFeedback] = useState(article.Feedback || '');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSave = async () => {
+        setIsLoading(true);
+        await onSave(article.ID, feedback);
+        setIsLoading(false);
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+        <div className="bg-white rounded-lg shadow-xl w-full max-w-lg">
+            <div className="p-6">
+              <h2 className="text-xl font-bold mb-2 text-gray-800">Góp ý cho bài báo</h2>
+              <p className="text-sm text-gray-600 mb-4 truncate" title={article.Title}>"{article.Title}"</p>
+              <textarea
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                rows={5}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Nhập phản hồi của bạn ở đây..."
+              />
+            </div>
+            <div className="bg-gray-50 px-6 py-4 flex justify-end gap-3 rounded-b-lg">
+              <button type="button" onClick={onClose} className="px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Hủy
+              </button>
+              <button type="button" onClick={handleSave} disabled={isLoading} className="px-4 py-2 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 disabled:bg-gray-400">
+                {isLoading ? 'Đang lưu...' : 'Lưu góp ý'}
+              </button>
+            </div>
+        </div>
+      </div>
+    );
+};
+
 
 const Admin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'documents' | 'questions' | 'articles'>('documents');
   const [isAddDocumentModalOpen, setIsAddDocumentModalOpen] = useState(false);
   const [isAddQuestionModalOpen, setIsAddQuestionModalOpen] = useState(false);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const [currentArticleForFeedback, setCurrentArticleForFeedback] = useState<ScientificArticle | null>(null);
   const { currentUser } = useAuth();
 
   // Data state
@@ -184,6 +227,20 @@ const Admin: React.FC = () => {
     if (!result.success) {
       setArticles(originalArticles);
       alert(`Lỗi khi cập nhật trạng thái: ${result.error}`);
+    }
+  };
+
+  const handleSaveFeedback = async (articleId: string, feedback: string) => {
+    const originalArticles = articles;
+    // Optimistic update
+    setArticles(prev => prev.map(art => art.ID === articleId ? { ...art, Feedback: feedback } : art));
+    setIsFeedbackModalOpen(false);
+    setCurrentArticleForFeedback(null);
+
+    const result = await updateArticleFeedback(articleId, feedback);
+    if (!result.success) {
+      setArticles(originalArticles);
+      alert(`Lỗi khi cập nhật phản hồi: ${result.error}`);
     }
   };
 
@@ -472,19 +529,27 @@ const Admin: React.FC = () => {
                             <thead className="text-xs text-gray-700 uppercase bg-gray-100">
                                 <tr>
                                     <SortableHeader name="Title" sortConfig={articleSort} onSort={handleArticleSort}>Tiêu đề</SortableHeader>
-                                    <SortableHeader name="SM_DOI" sortConfig={articleSort} onSort={handleArticleSort}>SM_DOI</SortableHeader>
-                                    <SortableHeader name="Authors" sortConfig={articleSort} onSort={handleArticleSort}>Tác giả</SortableHeader>
                                     <SortableHeader name="SubmitterEmail" sortConfig={articleSort} onSort={handleArticleSort}>Người đăng</SortableHeader>
                                     <SortableHeader name="SubmissionDate" sortConfig={articleSort} onSort={handleArticleSort}>Ngày đăng</SortableHeader>
                                     <SortableHeader name="Status" sortConfig={articleSort} onSort={handleArticleSort}>Trạng thái</SortableHeader>
+                                    <th scope="col" className="px-6 py-3">Phản hồi</th>
+                                    <th scope="col" className="px-6 py-3">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {paginatedArticles.length > 0 ? paginatedArticles.map(article => (
                                     <tr key={article.ID} className="bg-white border-b hover:bg-gray-50">
-                                        <td className="px-6 py-4 font-medium text-gray-900 max-w-sm truncate" title={article.Title}>{article.Title}</td>
-                                        <td className="px-6 py-4 font-mono">{article.SM_DOI}</td>
-                                        <td className="px-6 py-4 max-w-xs truncate" title={article.Authors}>{article.Authors}</td>
+                                        <td className="px-6 py-4 font-medium text-gray-900 max-w-sm truncate">
+                                            <Link 
+                                                to={`/article/${article.ID}`} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="hover:text-blue-600 hover:underline"
+                                                title={article.Title}
+                                            >
+                                                {article.Title}
+                                            </Link>
+                                        </td>
                                         <td className="px-6 py-4">{article.SubmitterEmail}</td>
                                         <td className="px-6 py-4">{article.SubmissionDate}</td>
                                         <td className="px-6 py-4">
@@ -503,10 +568,21 @@ const Admin: React.FC = () => {
                                                 <option value="Rejected">Rejected</option>
                                             </select>
                                         </td>
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-2 max-w-xs">
+                                                <span className="truncate text-gray-500" title={article.Feedback}>{article.Feedback}</span>
+                                                <button onClick={() => { setCurrentArticleForFeedback(article); setIsFeedbackModalOpen(true); }} className="text-blue-600 hover:underline flex-shrink-0 font-medium">Sửa</button>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-center">
+                                           <a href={article.DocumentURL.startsWith('text://') ? `/article/${article.ID}` : article.DocumentURL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium" title="Xem nội dung">
+                                              <Icon name="eye" className="w-5 h-5" /> Xem
+                                           </a>
+                                        </td>
                                     </tr>
                                 )) : (
                                     <tr>
-                                        <td colSpan={6} className="text-center py-10 text-gray-500">
+                                        <td colSpan={7} className="text-center py-10 text-gray-500">
                                             {articles.length > 0 ? 'Không tìm thấy bài báo phù hợp.' : 'Chưa có bài báo nào.'}
                                         </td>
                                     </tr>
@@ -579,6 +655,13 @@ const Admin: React.FC = () => {
         <AddQuestionForm
           onClose={() => setIsAddQuestionModalOpen(false)}
           onSave={handleSaveQuestion}
+        />
+      )}
+      {isFeedbackModalOpen && currentArticleForFeedback && (
+        <FeedbackModal
+            article={currentArticleForFeedback}
+            onClose={() => setIsFeedbackModalOpen(false)}
+            onSave={handleSaveFeedback}
         />
       )}
     </div>

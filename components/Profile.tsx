@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchAccounts, fetchArticles } from '../services/googleSheetService';
 import type { Account, ScientificArticle, Badge } from '../types';
 import { Icon } from './shared/Icon';
+import { useAuth } from '../contexts/AuthContext';
 
 
 // --- Badge Logic ---
@@ -74,22 +74,10 @@ const getResearchBadge = (approvedArticleCount: number): Badge | null => {
 
 // --- Components ---
 
-const StatCard: React.FC<{ icon: string; label: string; value: string | number; color: string }> = ({ icon, label, value, color }) => (
-    <div className="bg-gray-100 p-4 rounded-xl flex items-center gap-4">
-        <div className={`p-3 rounded-full ${color}`}>
-            <Icon name={icon} className="w-6 h-6 text-white" />
-        </div>
-        <div>
-            <p className="text-sm text-gray-500">{label}</p>
-            <p className="text-2xl font-bold text-gray-800">{value}</p>
-        </div>
-    </div>
-);
-
 const BadgeDisplayCard: React.FC<{ badge: Badge | null, title: string }> = ({ badge, title }) => {
     if (!badge) {
         return (
-            <div className="bg-gray-100 p-4 rounded-xl flex items-center gap-4 h-full border-l-4 border-gray-200">
+            <div className="bg-white p-4 rounded-xl flex items-center gap-4 h-full border-l-4 border-gray-200 shadow-sm">
                 <div className="p-3 rounded-full bg-gray-300">
                     <Icon name="question" className="w-6 h-6 text-white" />
                 </div>
@@ -113,7 +101,7 @@ const BadgeDisplayCard: React.FC<{ badge: Badge | null, title: string }> = ({ ba
     const borderColor = colorMap[badge.color] || badge.color;
 
     return (
-        <div className="bg-gray-50 p-4 rounded-xl flex items-center gap-4 border-l-4" style={{ borderColor }}>
+        <div className="bg-white p-4 rounded-xl flex items-center gap-4 border-l-4 shadow-sm" style={{ borderColor }}>
              <div className={`p-3 rounded-full ${badge.color}`}>
                 <Icon name={badge.icon} className="w-6 h-6 text-white" />
             </div>
@@ -126,9 +114,59 @@ const BadgeDisplayCard: React.FC<{ badge: Badge | null, title: string }> = ({ ba
     );
 };
 
+const CircularProgress: React.FC<{
+  percentage: number;
+  size?: number;
+  strokeWidth?: number;
+  colorClass?: string;
+}> = ({
+  percentage,
+  size = 120,
+  strokeWidth = 10,
+  colorClass = 'text-blue-500'
+}) => {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  // Ensure percentage is between 0 and 100
+  const clampedPercentage = Math.max(0, Math.min(percentage, 100));
+  const offset = circumference - (clampedPercentage / 100) * circumference;
+
+  return (
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg className="w-full h-full" viewBox={`0 0 ${size} ${size}`}>
+        <circle
+          className="text-gray-200"
+          strokeWidth={strokeWidth}
+          stroke="currentColor"
+          fill="transparent"
+          r={radius}
+          cx={size / 2}
+          cy={size / 2}
+        />
+        <circle
+          className={`transform -rotate-90 origin-center transition-all duration-700 ease-out ${colorClass}`}
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          stroke="currentColor"
+          fill="transparent"
+          r={radius}
+          cx={size / 2}
+          cy={size / 2}
+        />
+      </svg>
+      <span className="absolute inset-0 flex items-center justify-center text-xl font-bold text-gray-700">
+        {`${Math.round(clampedPercentage)}%`}
+      </span>
+    </div>
+  );
+};
+
 
 const Profile: React.FC = () => {
   const { email } = useParams<{ email: string }>();
+  const { currentUser } = useAuth();
   const [profileUser, setProfileUser] = useState<Account | null>(null);
   const [userArticles, setUserArticles] = useState<ScientificArticle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -231,10 +269,16 @@ const Profile: React.FC = () => {
   
   const totalQuestions = profileUser['Tổng số câu hỏi đã làm'];
   const correctQuestions = profileUser['Tổng số câu hỏi đã làm đúng'];
-  const accuracy = totalQuestions > 0 ? ((correctQuestions / totalQuestions) * 100).toFixed(1) + '%' : 'N/A';
+  const accuracy = totalQuestions > 0 ? (correctQuestions / totalQuestions) * 100 : 0;
+  
+  const weeklyQuestions = profileUser['Tổng số câu hỏi đã làm trong tuần'];
+  const weeklyCorrectQuestions = profileUser['Tổng số câu hỏi đã làm đúng trong tuần'];
+  const weeklyAccuracy = weeklyQuestions > 0 ? (weeklyCorrectQuestions / weeklyQuestions) * 100 : 0;
   
   const practiceBadge = getPracticeBadge(profileUser);
   const researchBadge = getResearchBadge(articleCounts.Approved);
+  const isOwner = currentUser?.Email.toLowerCase() === profileUser.Email.toLowerCase();
+
 
   const filterTabs: { id: typeof articleFilter, name: string }[] = [
     { id: 'All', name: 'Tất cả' },
@@ -259,24 +303,42 @@ const Profile: React.FC = () => {
         </div>
       </div>
 
-       {/* Badges Section */}
-      <div className="bg-white p-6 rounded-2xl shadow-lg">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Danh hiệu</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <BadgeDisplayCard badge={practiceBadge} title="Thành tích Luyện tập" />
-          <BadgeDisplayCard badge={researchBadge} title="Thành tích Nghiên cứu" />
-        </div>
-      </div>
-
-      {/* Stats Card */}
-      <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Thống kê học tập</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <StatCard icon="question" label="Tổng câu đã làm" value={totalQuestions} color="bg-blue-500" />
-              <StatCard icon="checkmark" label="Tổng câu đúng" value={correctQuestions} color="bg-green-500" />
-              <StatCard icon="trophy" label="Tỷ lệ chính xác" value={accuracy} color="bg-orange-500" />
-              <StatCard icon="flame" label="Câu đúng (tuần)" value={profileUser['Tổng số câu hỏi đã làm đúng trong tuần']} color="bg-red-500" />
+      {/* Achievements & Stats Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Stats Column */}
+        <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-lg">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Tổng quan thành tích</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Overall Accuracy */}
+            <div className="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center text-center">
+              <CircularProgress percentage={accuracy} colorClass="text-blue-500" />
+              <p className="mt-3 font-bold text-gray-700">Tỷ lệ chính xác tổng thể</p>
+            </div>
+            {/* Weekly Accuracy */}
+            <div className="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center text-center">
+              <CircularProgress percentage={weeklyAccuracy} colorClass="text-green-500" />
+              <p className="mt-3 font-bold text-gray-700">Tỷ lệ chính xác (Tuần)</p>
+            </div>
+            {/* Total Questions */}
+            <div className="bg-gray-50 p-6 rounded-xl">
+              <Icon name="question" className="w-8 h-8 text-blue-500 mb-2" />
+              <p className="text-sm text-gray-500">Tổng câu đã làm</p>
+              <p className="text-3xl font-bold text-gray-800">{totalQuestions.toLocaleString()}</p>
+            </div>
+            {/* Weekly Questions */}
+            <div className="bg-gray-50 p-6 rounded-xl">
+              <Icon name="flame" className="w-8 h-8 text-red-500 mb-2" />
+              <p className="text-sm text-gray-500">Câu đã làm (Tuần)</p>
+              <p className="text-3xl font-bold text-gray-800">{weeklyQuestions.toLocaleString()}</p>
+            </div>
           </div>
+        </div>
+
+        {/* Badges Column */}
+        <div className="space-y-6">
+            <BadgeDisplayCard badge={practiceBadge} title="Thành tích Luyện tập" />
+            <BadgeDisplayCard badge={researchBadge} title="Thành tích Nghiên cứu" />
+        </div>
       </div>
       
       {/* Activity Card */}
@@ -312,7 +374,7 @@ const Profile: React.FC = () => {
                         const Wrapper = ({children}: {children: React.ReactNode}) => 
                             article.Status === 'Approved' ? 
                             <Link to={`/article/${article.ID}`} className="block p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">{children}</Link> :
-                            <div className="p-4 rounded-lg bg-gray-50 cursor-not-allowed">{children}</div>;
+                            <div className="p-4 rounded-lg bg-gray-50">{children}</div>;
                         
                         return (
                              <Wrapper key={article.ID}>
@@ -327,6 +389,15 @@ const Profile: React.FC = () => {
                                     <span>{article.SubmissionDate.split(' ')[0]}</span>
                                     <span className="font-mono">SM_DOI: {article.SM_DOI}</span>
                                 </div>
+                                {isOwner && article.Feedback && (
+                                    <div className="mt-3 bg-blue-50 p-3 rounded-md border-l-4 border-blue-400">
+                                        <p className="text-sm font-semibold text-blue-800 flex items-center gap-2">
+                                            <Icon name="feedback" className="w-4 h-4" />
+                                            Phản hồi từ Admin:
+                                        </p>
+                                        <p className="text-sm text-blue-700 whitespace-pre-wrap mt-1">{article.Feedback}</p>
+                                    </div>
+                                )}
                             </Wrapper>
                         )
                     })}

@@ -45,10 +45,11 @@ const ArticleDetail: React.FC = () => {
     if (error || !article) {
         return <div className="text-center p-10 text-red-500 bg-red-50 rounded-lg">{error || "Không thể hiển thị bài báo."}</div>;
     }
+    
+    const canViewAdminContent = currentUser && (currentUser['Danh hiệu'] === 'Admin' || currentUser['Danh hiệu'] === 'Developer');
+    const isAuthor = currentUser?.Email === article.SubmitterEmail;
 
-    const canView = currentUser && (currentUser['Danh hiệu'] === 'Admin' || currentUser['Danh hiệu'] === 'Developer');
-
-    if (article.Status !== 'Approved' && !canView) {
+    if (article.Status !== 'Approved' && !canViewAdminContent && !isAuthor) {
         return (
              <div className="text-center p-10 bg-yellow-50 rounded-lg max-w-md mx-auto">
                 <Icon name="information-circle" className="w-12 h-12 mx-auto text-yellow-400" />
@@ -70,7 +71,7 @@ const ArticleDetail: React.FC = () => {
 
             <article className="space-y-6">
                 <header>
-                    {canView && article.Status !== 'Approved' && (
+                    {(canViewAdminContent || isAuthor) && article.Status !== 'Approved' && (
                         <div className={`inline-block px-3 py-1 text-sm font-semibold rounded-full mb-2 ${
                             article.Status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
                             article.Status === 'Rejected' ? 'bg-red-100 text-red-800' : ''
@@ -103,17 +104,42 @@ const ArticleDetail: React.FC = () => {
                     ))}
                 </div>
 
-                <div className="pt-6">
-                     <a
-                        href={article.DocumentURL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                        <Icon name="document" className="w-5 h-5" />
-                        Đọc toàn văn (PDF)
-                    </a>
+                <div className="border-t pt-6">
+                    <h2 className="text-xl font-bold text-gray-800 mb-4">Toàn văn</h2>
+                     {(() => {
+                        if (article.DocumentURL && article.DocumentURL.startsWith('text://')) {
+                            const fullText = article.DocumentURL.substring(7);
+                            return (
+                                <div className="bg-gray-50 p-6 rounded-md prose max-w-none">
+                                    <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">{fullText}</p>
+                                </div>
+                            );
+                        } else if (article.DocumentURL) {
+                            return (
+                                <a
+                                    href={article.DocumentURL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+                                >
+                                    <Icon name="document" className="w-5 h-5" />
+                                    Đọc toàn văn (PDF)
+                                </a>
+                            );
+                        } else {
+                            return <p className="text-gray-500 italic">Không có nội dung toàn văn hoặc liên kết PDF cho bài báo này.</p>;
+                        }
+                    })()}
                 </div>
+
+                {(canViewAdminContent || isAuthor) && article.Feedback && (
+                    <div className="border-t pt-6">
+                        <h2 className="text-xl font-bold text-gray-800 mb-4">Phản hồi từ quản trị viên</h2>
+                        <div className="bg-blue-50 p-4 rounded-md border-l-4 border-blue-400">
+                             <p className="text-blue-800 whitespace-pre-wrap">{article.Feedback}</p>
+                        </div>
+                    </div>
+                )}
             </article>
         </div>
     );

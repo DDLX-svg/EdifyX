@@ -61,6 +61,7 @@ export interface ScientificArticle {
   SubmitterEmail: string;
   SubmissionDate: string;
   Status: 'Pending' | 'Approved' | 'Rejected' | string;
+  Feedback?: string;
 }
 
 export interface Badge {

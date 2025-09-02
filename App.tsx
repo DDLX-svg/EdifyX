@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
@@ -18,6 +19,7 @@ import Leaderboard from './components/Leaderboard';
 import ChallengeQuiz from './components/ChallengeQuiz';
 import Profile from './components/Profile';
 import Guide from './components/Guide';
+import Publications from './components/Publications';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 const AppContent: React.FC = () => {
@@ -87,6 +89,10 @@ const AppContent: React.FC = () => {
            <Route 
             path="/guide" 
             element={currentUser ? <Guide /> : <Navigate to="/login" />} 
+          />
+          <Route 
+            path="/publications" 
+            element={currentUser ? <Publications /> : <Navigate to="/login" />} 
           />
           <Route
             path="/admin"

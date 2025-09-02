@@ -1,3 +1,4 @@
+
 import { parseCSV } from '../utils/csvParser';
 import type { AnatomyQuestion, MedicalQuestion, Account, DocumentData, AnyQuestion, ScientificArticle } from '../types';
 
@@ -5,8 +6,7 @@ const SHEET_ID = '1GMdIGBbcTgj2cLA5Ux-_X3KLGhAwYcgc08r2TjzKFVs';
 const BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=`;
 
 // This is the correct, user-provided Google Apps Script URL.
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyUJPZSgTbbaGx3tpKjSh1cf3TqxIktSPRXYbloR34_bTOia_73-8QqKy3fsV5y6MKBsA/exec';
-
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzS6srMo8uHm3GyBTbXzS3SQzTHla1-Xdq-H4SqPL8OJdY56B-H9R-CER996HN00ey8cQ/exec';
 const fetchData = async <T,>(sheetName: string): Promise<T[]> => {
   const url = `${BASE_URL}${encodeURIComponent(sheetName)}&t=${new Date().getTime()}`;
   const response = await fetch(url);
@@ -118,10 +118,24 @@ export const fetchDocuments = async (): Promise<DocumentData[]> => {
   }));
 };
 
+export const fetchPublications = async (): Promise<DocumentData[]> => {
+  const docs = await fetchData<any>('Publications');
+  return docs.map((doc: any) => ({
+    title: doc['Tiêu đề'] || '',
+    author: doc['Tác giả'] || '',
+    category: doc['Vinh danh'] || '',
+    pages: Number(doc['# Số trang']) || 0,
+    imageUrl: doc['URL Hình ảnh'] || '',
+    documentUrl: doc['URL Tài liệu'] || '',
+    uploader: doc['Người đăng'] || '',
+    uploadDate: doc['Ngày đăng'] || '',
+  }));
+};
+
 export const fetchArticles = async (): Promise<ScientificArticle[]> => {
     // IMPORTANT: This function requires the "Research_Accounts" Google Sheet to have the exact English column headers.
     // Any discrepancy will cause data to not display correctly.
-    // Required headers: ID, Title, Authors, Abstract, Keywords, Category, DocumentURL, SubmitterEmail, SubmissionDate, Pending
+    // Required headers: ID, Title, Authors, Abstract, Keywords, Category, DocumentURL, SubmitterEmail, SubmissionDate, Pending, Feedback
     const rawArticles = await fetchData<any>('Research_Accounts');
     return rawArticles.map((art: any) => {
       const id = art['ID'] || '';
@@ -138,6 +152,7 @@ export const fetchArticles = async (): Promise<ScientificArticle[]> => {
           SubmissionDate: art['SubmissionDate'] || '',
           // The status column header is named 'Pending' in the user's sheet.
           Status: art['Pending'] || 'Pending', 
+          Feedback: art['Feedback'] || '',
       };
     });
 };
@@ -182,11 +197,16 @@ export const addDocument = async (docData: Omit<DocumentData, 'uploader' | 'uplo
     }
 };
 
-export const addArticle = async (articleData: Omit<ScientificArticle, 'ID' | 'SM_DOI' | 'SubmissionDate' | 'SubmitterEmail' | 'Status'>, submitterEmail: string): Promise<{ success: boolean; error?: string; newId?: string }> => {
+export const addArticle = async (articleData: Omit<ScientificArticle, 'ID' | 'SM_DOI' | 'SubmissionDate' | 'SubmitterEmail' | 'Status' | 'Feedback'>, submitterEmail: string): Promise<{ success: boolean; error?: string; newId?: string }> => {
     try {
         const payload = {
             action: 'addArticle',
-            ...articleData,
+            Title: articleData.Title,
+            Authors: articleData.Authors,
+            Abstract: articleData.Abstract,
+            Keywords: articleData.Keywords,
+            Category: articleData.Category,
+            DocumentURL: articleData.DocumentURL || '',
             submitterEmail: submitterEmail
         };
         const result = await postToAppsScript(payload);
@@ -210,6 +230,22 @@ export const updateArticleStatus = async (articleId: string, status: string): Pr
             return { success: true };
         }
         return { success: false, error: result.message || 'An unknown error occurred while updating article status.' };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+};
+
+export const updateArticleFeedback = async (articleId: string, feedback: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+        const result = await postToAppsScript({
+            action: 'updateArticleFeedback',
+            id: articleId,
+            feedback: feedback
+        });
+        if (result.status === 'success') {
+            return { success: true };
+        }
+        return { success: false, error: result.message || 'An unknown error occurred while updating feedback.' };
     } catch (error: any) {
         return { success: false, error: error.message };
     }

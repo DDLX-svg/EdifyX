@@ -39,54 +39,60 @@ const Home: React.FC = () => {
   ];
 
   const colorClasses = {
-    blue: { bg: 'bg-blue-500', button: 'bg-gradient-to-r from-blue-500 to-blue-600' },
-    green: { bg: 'bg-green-500', button: 'bg-gradient-to-r from-green-500 to-teal-500' },
-    orange: { bg: 'bg-orange-500', button: 'bg-gradient-to-r from-orange-500 to-red-500' },
-    purple: { bg: 'bg-purple-500', button: 'bg-gradient-to-r from-purple-500 to-indigo-500' },
+    blue: { bg: 'bg-gradient-to-br from-blue-500 to-cyan-500', button: 'bg-gradient-to-r from-blue-500 to-blue-600' },
+    green: { bg: 'bg-gradient-to-br from-green-500 to-emerald-500', button: 'bg-gradient-to-r from-green-500 to-teal-500' },
+    purple: { bg: 'bg-gradient-to-br from-purple-500 to-indigo-500', button: 'bg-gradient-to-r from-purple-500 to-indigo-500' },
   };
 
   return (
-    <div className="space-y-24">
+    <div className="space-y-20">
       {/* Hero Section */}
-      <section className="text-center bg-gradient-to-br from-blue-600 to-green-400 rounded-3xl py-20 px-8">
-        <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-4">
-          Chào mừng đến với SuniMed
-        </h1>
-        <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-8">
-          Nền tảng học tập y khoa hàng đầu với hệ thống luyện thi và chia sẻ tài liệu chuyên nghiệp
-        </p>
-        <Link
-          to="/practice"
-          className="bg-white text-blue-600 font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-100 transition duration-300 transform hover:scale-105 shadow-lg"
-        >
-          Bắt đầu luyện tập ngay <Icon name="arrowRight" className="inline-block w-5 h-5 ml-2" />
-        </Link>
+      <section className="relative text-center bg-gray-900 rounded-3xl py-20 px-8 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-green-500 opacity-90"></div>
+        <div 
+            className="absolute inset-0 bg-repeat opacity-5"
+            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`}}
+        ></div>
+        <div className="relative z-10">
+            <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight shadow-text">
+            Chinh phục Y khoa cùng SuniMed
+            </h1>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-10">
+            Nền tảng học tập y khoa hàng đầu với hệ thống luyện thi và chia sẻ tài liệu chuyên nghiệp
+            </p>
+            <Link
+            to="/practice"
+            className="bg-white text-blue-600 font-bold py-4 px-10 rounded-full text-lg hover:bg-gray-100 transition duration-300 transform hover:scale-105 shadow-2xl group"
+            >
+            Bắt đầu luyện tập <Icon name="arrowRight" className="inline-block w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+        </div>
       </section>
 
       {/* Stats Section */}
-      <section className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center -mt-40 relative z-10">
+      <section className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center -mt-36 relative z-10">
         {stats.map((stat) => (
-          <div key={stat.label} className="bg-white p-8 rounded-2xl shadow-lg">
-            <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-green-100 mb-4">
+          <div key={stat.label} className="bg-white p-8 rounded-2xl shadow-xl group hover:shadow-2xl transition-shadow duration-300">
+            <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-green-100 mb-4 transition-transform duration-300 group-hover:scale-110">
               <Icon name={stat.icon} className="h-8 w-8 text-blue-600" />
             </div>
-            <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+            <p className="text-4xl font-bold text-gray-900">{stat.value}</p>
             <p className="text-gray-500 mt-1">{stat.label}</p>
           </div>
         ))}
       </section>
       
       {/* Modules Section */}
-      <section className="pt-16">
+      <section className="pt-12">
         <h2 className="text-4xl font-bold text-center mb-4">Khám phá các module học tập</h2>
         <p className="text-lg text-gray-600 text-center max-w-2xl mx-auto mb-12">
           Hệ thống học tập toàn diện được thiết kế đặc biệt cho sinh viên và bác sĩ
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {modules.map((mod) => (
-            <div key={mod.title} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
+            <div key={mod.title} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
               <div className={`p-8 text-white ${colorClasses[mod.color as keyof typeof colorClasses].bg}`}>
-                 <Icon name={mod.icon} className="w-12 h-12 mb-4" />
+                 <Icon name={mod.icon} className="w-12 h-12 mb-4 opacity-90" />
                 <h3 className="text-2xl font-bold">{mod.title}</h3>
               </div>
               <div className="p-8 flex-grow flex flex-col">
@@ -94,16 +100,16 @@ const Home: React.FC = () => {
                 <ul className="space-y-3 mb-8">
                   {mod.features.map((feature) => (
                     <li key={feature} className="flex items-center">
-                      <Icon name="checkmark" className="w-5 h-5 text-green-500 mr-3" />
+                      <Icon name="check-circle" className="w-6 h-6 text-green-500 mr-3" />
                       <span className="text-gray-700">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 <Link
                   to={mod.path}
-                  className={`mt-auto text-white font-semibold py-3 px-6 rounded-lg text-center transition duration-300 hover:opacity-90 shadow-md flex items-center justify-center ${colorClasses[mod.color as keyof typeof colorClasses].button}`}
+                  className={`mt-auto text-white font-semibold py-3 px-6 rounded-lg text-center transition duration-300 hover:opacity-90 shadow-lg flex items-center justify-center group ${colorClasses[mod.color as keyof typeof colorClasses].button}`}
                 >
-                  Khám phá ngay <Icon name="arrowRight" className="inline-block w-5 h-5 ml-2" />
+                  Khám phá ngay <Icon name="arrowRight" className="inline-block w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </div>
             </div>
@@ -112,7 +118,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Guide Link Section */}
-      <section className="rounded-3xl p-12 bg-gray-100 text-center">
+      <section className="rounded-3xl p-12 bg-slate-100 text-center">
         <Icon name="help" className="w-16 h-16 mx-auto text-blue-600 mb-4" />
         <h2 className="text-4xl font-bold mb-3">Hướng dẫn sử dụng</h2>
         <p className="text-lg text-gray-600 mb-8 max-w-xl mx-auto">
@@ -120,9 +126,10 @@ const Home: React.FC = () => {
         </p>
         <Link 
             to="/guide"
-            className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 shadow-lg"
+            className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 shadow-lg group inline-flex items-center"
         >
             Xem hướng dẫn chi tiết
+            <Icon name="arrowRight" className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
         </Link>
       </section>
 
@@ -134,29 +141,19 @@ const Home: React.FC = () => {
           Sự đóng góp của bạn giúp chúng tôi hoàn thiện SuniMed hơn mỗi ngày.
         </p>
         <a 
-          href="https://docs.google.com/forms/d/e/1FAIpQLSc_xL0b-3Q5B_.../viewform" 
+          href="https://forms.gle/your-feedback-form-link"
           target="_blank" 
           rel="noopener noreferrer"
-          className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 shadow-lg inline-block"
+          className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 shadow-lg inline-block group"
         >
           Gửi góp ý
         </a>
       </section>
-
-      {/* Leaderboard Banner */}
-      <section className="rounded-3xl p-12 bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-center">
-         <Icon name="trophy" className="w-16 h-16 mx-auto text-yellow-300 mb-4" />
-        <h2 className="text-4xl font-bold mb-3">Bảng xếp hạng</h2>
-        <p className="text-lg text-purple-100 mb-8 max-w-xl mx-auto">
-          Thi đấu hàng tuần và vinh danh các nhà nghiên cứu hàng đầu của SuniMed.
-        </p>
-        <Link 
-          to="/leaderboard"
-          className="bg-white text-purple-600 font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-100 transition duration-300 transform hover:scale-105 shadow-lg"
-        >
-          Xem bảng xếp hạng
-        </Link>
-      </section>
+       <style>{`
+        .shadow-text {
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+       `}</style>
     </div>
   );
 };

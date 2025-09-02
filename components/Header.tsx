@@ -50,6 +50,9 @@ const Header: React.FC = () => {
                 </span>
               )}
             </NavLink>
+             <NavLink to="/publications" className={navLinkClass}>
+              <Icon name="star" className="w-4 h-4 mr-2" /> Ấn phẩm
+            </NavLink>
             <NavLink to="/practice" className={navLinkClass}>
               <Icon name="practice" className="w-4 h-4 mr-2" /> Luyện tập
             </NavLink>
