@@ -1,0 +1,30 @@
+[build]
+  command = "npm run build"
+  publish = "dist" # mặc định cho Vite
+
+# ---------- Framework: Create React App ----------
+[context.cra.environment]
+  REACT_APP = "true"
+
+[context.cra.build]
+  command = "npm run build"
+  publish = "build"
+
+# ---------- Framework: Next.js ----------
+[context.next.environment]
+  NEXT_PUBLIC = "true"
+
+[context.next.build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# ---------- Framework: Vite ----------
+[context.vite.environment]
+  VITE = "true"
+
+[context.vite.build]
+  command = "npm run build"
+  publish = "dist"
