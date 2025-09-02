@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
-import { fetchDocuments } from '../services/googleSheetService';
-import type { DocumentData } from '../types';
-import { transformGoogleDriveImageUrl } from '../utils/imageUtils';
-import { getMonthYearFromVNDate, formatVNDate } from '../utils/dateUtils';
-import { Icon } from './shared/Icon';
+import { fetchDocuments } from '../services/googleSheetService.ts';
+import type { DocumentData } from '../types.ts';
+import { transformGoogleDriveImageUrl } from '../utils/imageUtils.ts';
+import { getMonthYearFromVNDate, formatVNDate } from '../utils/dateUtils.ts';
+import { Icon } from './shared/Icon.tsx';
 
 // This is the placeholder image content.
 const placeholderImage = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600' width='800' height='600' style='background-color:%23e2e8f0;'%3E%3Cg fill='%2394a3b8' fill-opacity='0.6'%3E%3Crect x='200' y='250' width='400' height='40' rx='5'/%3E%3Crect x='250' y='310' width='300' height='20' rx='3'/%3E%3Crect x='250' y='340' width='300' height='20' rx='3'/%3E%3C/g%3E%3C/svg%3E";

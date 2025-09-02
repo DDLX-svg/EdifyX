@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { addArticle } from '../services/googleSheetService';
-import { Icon } from './shared/Icon';
+import { useAuth } from '../contexts/AuthContext.tsx';
+import { addArticle } from '../services/googleSheetService.ts';
+import { Icon } from './shared/Icon.tsx';
 
 type SubmissionType = 'url' | 'text';
 

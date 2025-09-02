@@ -1,6 +1,6 @@
 
-import { parseCSV } from '../utils/csvParser';
-import type { AnatomyQuestion, MedicalQuestion, Account, DocumentData, AnyQuestion, ScientificArticle } from '../types';
+import { parseCSV } from '../utils/csvParser.ts';
+import type { AnatomyQuestion, MedicalQuestion, Account, DocumentData, AnyQuestion, ScientificArticle } from '../types.ts';
 
 const SHEET_ID = '1GMdIGBbcTgj2cLA5Ux-_X3KLGhAwYcgc08r2TjzKFVs';
 const BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=`;

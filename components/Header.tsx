@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Icon } from './shared/Icon';
-import { useAuth } from '../contexts/AuthContext';
+import { Icon } from './shared/Icon.tsx';
+import { useAuth } from '../contexts/AuthContext.tsx';
 
 const Header: React.FC = () => {
   const { currentUser, logout, newArticleCount, markArticlesAsSeen } = useAuth();

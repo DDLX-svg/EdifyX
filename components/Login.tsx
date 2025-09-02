@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { Icon } from './shared/Icon';
+import { useAuth } from '../contexts/AuthContext.tsx';
+import { Icon } from './shared/Icon.tsx';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');

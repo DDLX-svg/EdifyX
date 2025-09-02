@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from './shared/Icon';
-import QuizConfigModal, { QuizOption } from './shared/QuizConfigModal';
+import { Icon } from './shared/Icon.tsx';
+import QuizConfigModal, { QuizOption } from './shared/QuizConfigModal.tsx';
 
 type QuizType = 'anatomy' | 'pharmacy' | 'medicine';
 

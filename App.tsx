@@ -1,26 +1,26 @@
 
 import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Home from './components/Home';
-import Practice from './components/Practice';
-import AnatomyQuiz from './components/AnatomyQuiz';
-import MedicalQuiz from './components/MedicalQuiz';
-import Admin from './components/Admin';
-import Documents from './components/Documents';
-import Articles from './components/Articles';
-import SubmitArticle from './components/SubmitArticle';
-import ArticleDetail from './components/ArticleDetail';
-import Login from './components/Login';
-import Register from './components/Register';
-import VerifyEmail from './components/VerifyEmail';
-import Leaderboard from './components/Leaderboard';
-import ChallengeQuiz from './components/ChallengeQuiz';
-import Profile from './components/Profile';
-import Guide from './components/Guide';
-import Publications from './components/Publications';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import Header from './components/Header.tsx';
+import Footer from './components/Footer.tsx';
+import Home from './components/Home.tsx';
+import Practice from './components/Practice.tsx';
+import AnatomyQuiz from './components/AnatomyQuiz.tsx';
+import MedicalQuiz from './components/MedicalQuiz.tsx';
+import Admin from './components/Admin.tsx';
+import Documents from './components/Documents.tsx';
+import Articles from './components/Articles.tsx';
+import SubmitArticle from './components/SubmitArticle.tsx';
+import ArticleDetail from './components/ArticleDetail.tsx';
+import Login from './components/Login.tsx';
+import Register from './components/Register.tsx';
+import VerifyEmail from './components/VerifyEmail.tsx';
+import Leaderboard from './components/Leaderboard.tsx';
+import ChallengeQuiz from './components/ChallengeQuiz.tsx';
+import Profile from './components/Profile.tsx';
+import Guide from './components/Guide.tsx';
+import Publications from './components/Publications.tsx';
+import { AuthProvider, useAuth } from './contexts/AuthContext.tsx';
 
 const AppContent: React.FC = () => {
   const { currentUser, loading } = useAuth();

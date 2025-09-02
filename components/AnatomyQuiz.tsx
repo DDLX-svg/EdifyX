@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { fetchAnatomyQuestions } from '../services/googleSheetService';
-import { useAuth } from '../contexts/AuthContext';
-import type { AnatomyQuestion } from '../types';
-import { Icon } from './shared/Icon';
+import { fetchAnatomyQuestions } from '../services/googleSheetService.ts';
+import { useAuth } from '../contexts/AuthContext.tsx';
+import type { AnatomyQuestion } from '../types.ts';
+import { Icon } from './shared/Icon.tsx';
 
 type UserAnswer = {
     question: AnatomyQuestion;

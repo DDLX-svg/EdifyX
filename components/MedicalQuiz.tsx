@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { fetchPharmacyQuestions, fetchMedicineQuestions } from '../services/googleSheetService';
-import { useAuth } from '../contexts/AuthContext';
-import type { MedicalQuestion } from '../types';
-import { Icon } from './shared/Icon';
+import { fetchPharmacyQuestions, fetchMedicineQuestions } from '../services/googleSheetService.ts';
+import { useAuth } from '../contexts/AuthContext.tsx';
+import type { MedicalQuestion } from '../types.ts';
+import { Icon } from './shared/Icon.tsx';
 
 type UserAnswer = {
     question: MedicalQuestion;

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import type { DocumentData } from '../../types';
+import type { DocumentData } from '../../types.ts';
 
 interface AddDocumentFormProps {
   onClose: () => void;

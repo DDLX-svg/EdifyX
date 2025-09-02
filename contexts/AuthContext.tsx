@@ -1,6 +1,7 @@
+
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
-import { fetchAccounts, registerUser, resendVerificationEmail as resendVerificationEmailService, fetchArticles } from '../services/googleSheetService';
-import type { Account } from '../types';
+import { fetchAccounts, registerUser, resendVerificationEmail as resendVerificationEmailService, fetchArticles } from '../services/googleSheetService.ts';
+import type { Account } from '../types.ts';
 
 interface LoginResult {
   success: boolean;

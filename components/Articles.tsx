@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { fetchArticles } from '../services/googleSheetService';
-import type { ScientificArticle } from '../types';
-import { Icon } from './shared/Icon';
+import { fetchArticles } from '../services/googleSheetService.ts';
+import type { ScientificArticle } from '../types.ts';
+import { Icon } from './shared/Icon.tsx';
 
 const ArticleCard: React.FC<{ article: ScientificArticle }> = ({ article }) => (
     <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200 flex flex-col">

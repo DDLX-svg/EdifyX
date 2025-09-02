@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { fetchAccounts, fetchArticles } from '../services/googleSheetService';
-import type { Account, ScientificArticle, Badge } from '../types';
-import { Icon } from './shared/Icon';
-import { useAuth } from '../contexts/AuthContext';
+import { fetchAccounts, fetchArticles } from '../services/googleSheetService.ts';
+import type { Account, ScientificArticle, Badge } from '../types.ts';
+import { Icon } from './shared/Icon.tsx';
+import { useAuth } from '../contexts/AuthContext.tsx';
 
 
 // --- Badge Logic ---

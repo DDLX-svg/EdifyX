@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { fetchArticles } from '../services/googleSheetService';
-import type { ScientificArticle } from '../types';
-import { Icon } from './shared/Icon';
-import { useAuth } from '../contexts/AuthContext';
+import { fetchArticles } from '../services/googleSheetService.ts';
+import type { ScientificArticle } from '../types.ts';
+import { Icon } from './shared/Icon.tsx';
+import { useAuth } from '../contexts/AuthContext.tsx';
 
 const ArticleDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();

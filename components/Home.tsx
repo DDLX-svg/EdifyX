@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Icon } from './shared/Icon';
-import type { Badge } from '../types';
+import { Icon } from './shared/Icon.tsx';
+import type { Badge } from '../types.ts';
 
 const Home: React.FC = () => {
   const stats = [

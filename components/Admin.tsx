@@ -1,11 +1,12 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Icon } from './shared/Icon';
-import AddDocumentForm from './admin/AddDocumentForm';
-import AddQuestionForm from './admin/AddQuestionForm';
-import { useAuth } from '../contexts/AuthContext';
-import { addDocument, fetchDocuments, fetchAllQuestions, fetchArticles, updateArticleStatus, updateArticleFeedback } from '../services/googleSheetService';
-import type { DocumentData, AnyQuestion, ScientificArticle } from '../types';
+import { Icon } from './shared/Icon.tsx';
+import AddDocumentForm from './admin/AddDocumentForm.tsx';
+import AddQuestionForm from './admin/AddQuestionForm.tsx';
+import { useAuth } from '../contexts/AuthContext.tsx';
+import { addDocument, fetchDocuments, fetchAllQuestions, fetchArticles, updateArticleStatus, updateArticleFeedback } from '../services/googleSheetService.ts';
+import type { DocumentData, AnyQuestion, ScientificArticle } from '../types.ts';
 
 type SortDirection = 'ascending' | 'descending';
 type DocumentSortKeys = keyof DocumentData;
