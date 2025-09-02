@@ -137,7 +137,7 @@ const ChallengeQuiz: React.FC = () => {
         return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
     };
     
-    if (!config) return <Navigate to="/weekly-challenge" replace />;
+    if (!config) return <Navigate to="/leaderboard" replace />;
     if (isLoading) return <div className="text-center p-10">Đang chuẩn bị thử thách...</div>;
     if (error) return <div className="text-center p-10 text-red-500">{error}</div>;
     if (!isLoading && quizQuestions.length === 0) return <div className="text-center p-10">Không đủ câu hỏi để bắt đầu. Vui lòng thử lại sau.</div>;
@@ -158,7 +158,7 @@ const ChallengeQuiz: React.FC = () => {
                 </div>
                 
                 <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-                     <button onClick={() => navigate('/weekly-challenge', { replace: true })} className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white font-bold py-3 px-6 rounded-full hover:bg-blue-700 transition duration-300">
+                     <button onClick={() => navigate('/leaderboard', { replace: true })} className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white font-bold py-3 px-6 rounded-full hover:bg-blue-700 transition duration-300">
                         <Icon name="trophy" className="w-5 h-5" /> Xem bảng xếp hạng
                     </button>
                 </div>
