@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+// FIX: Removed unused import of 'Link' to resolve member not found error.
 
 const Footer: React.FC = () => {
   return (

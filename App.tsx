@@ -51,48 +51,18 @@ const AppContent: React.FC = () => {
           <Route path="/guide" element={<Guide />} />
 
           {/* Protected Routes */}
-           <Route 
-            path="/articles" 
-            element={currentUser ? <Articles /> : <Navigate to="/login" />} 
-          />
-           <Route 
-            path="/articles/submit" 
-            element={currentUser ? <SubmitArticle /> : <Navigate to="/login" />} 
-          />
-           <Route 
-            path="/article/:id" 
-            element={currentUser ? <ArticleDetail /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/practice" 
-            element={currentUser ? <Practice /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/practice/anatomy-station" 
-            element={currentUser ? <AnatomyQuiz /> : <Navigate to="/login" />} 
-          />
-           <Route 
-            path="/medical-quiz/:specialty" 
-            element={currentUser ? <MedicalQuiz /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/challenge-quiz" 
-            element={currentUser ? <ChallengeQuiz /> : <Navigate to="/login" />} 
-          />
-           <Route 
-            path="/profile/:email" 
-            element={currentUser ? <Profile /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/publications" 
-            element={currentUser ? <Publications /> : <Navigate to="/login" />} 
-          />
-          <Route
-            path="/admin"
-            element={canAccessAdmin ? <Admin /> : <Navigate to="/login" />}
-          />
+          <Route path="/articles/submit" element={currentUser ? <SubmitArticle /> : <Navigate to="/login" replace />} />
+          <Route path="/article/:id" element={currentUser ? <ArticleDetail /> : <Navigate to="/login" replace />} />
+          <Route path="/articles" element={currentUser ? <Articles /> : <Navigate to="/login" replace />} />
+          <Route path="/practice/anatomy-station" element={currentUser ? <AnatomyQuiz /> : <Navigate to="/login" replace />} />
+          <Route path="/medical-quiz/:specialty" element={currentUser ? <MedicalQuiz /> : <Navigate to="/login" replace />} />
+          <Route path="/practice" element={currentUser ? <Practice /> : <Navigate to="/login" replace />} />
+          <Route path="/challenge-quiz" element={currentUser ? <ChallengeQuiz /> : <Navigate to="/login" replace />} />
+          <Route path="/profile/:email" element={currentUser ? <Profile /> : <Navigate to="/login" replace />} />
+          <Route path="/publications" element={currentUser ? <Publications /> : <Navigate to="/login" replace />} />
+          <Route path="/admin" element={canAccessAdmin ? <Admin /> : <Navigate to="/login" replace />} />
 
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
       <Footer />
