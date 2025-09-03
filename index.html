@@ -12,12 +12,12 @@
     <meta property="og:title" content="SuniMed - Nền tảng học y tương tác" />
     <meta property="og:description" content="Học y trực tuyến với mô phỏng giải phẫu, trắc nghiệm y khoa, và chia sẻ tài liệu" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/preview.png" />
+    <meta property="og:image" content="%PUBLIC_URL%/preview.png" />
     <meta property="og:url" content="https://ddlx-svg.github.io/SuniMed/" />
 
     <!-- Favicon -->
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.svg" type="image/svg+xml" />
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -35,23 +35,11 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- React & ReactDOM (unpkg) -->
-    <script type="importmap">
-    {
-      "imports": {
-        "react": "https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js",
-        "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js",
-        "react-router-dom": "https://cdn.jsdelivr.net/npm/react-router-dom@6/umd/react-router-dom.min.js"
-      }
-    }
-    </script>
-
   </head>
   <body class="bg-gray-50 font-sans">
     <div id="root"></div>
 
-    <!-- Entry React file -->
+    <!-- React Entry (ESM) -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
