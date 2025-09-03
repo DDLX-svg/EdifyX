@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from './shared/Icon.tsx';
 import QuizConfigModal, { QuizOption } from './shared/QuizConfigModal.tsx';
+import PracticeAnalytics from './shared/PracticeAnalytics.tsx';
+import { useAuth } from '../contexts/AuthContext.tsx';
 
 type QuizType = 'anatomy' | 'pharmacy' | 'medicine';
 
 const practiceModes = {
   anatomy: {
-    icon: 'station',
+    icon: 'x-ray',
     title: 'Thi chạy trạm',
     description: 'Mô phỏng kỳ thi chạy trạm giải phẫu với các bài tập định vị.',
     stats: [{ value: '50+', label: 'Sơ đồ' }, { value: 'Thực tế', label: 'Mô phỏng' }],
@@ -30,7 +32,7 @@ const practiceModes = {
     ],
   },
   medicine: {
-    icon: 'stethoscope',
+    icon: 'logo',
     title: 'Y đa khoa',
     description: 'Câu hỏi trắc nghiệm chuyên sâu từ các khoa lâm sàng.',
     stats: [{ value: '300+', label: 'Câu hỏi' }, { value: 'Thử thách', label: 'Độ khó' }],
@@ -83,6 +85,7 @@ const Practice: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<QuizType | null>(null);
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
   const openModal = (quizType: QuizType) => {
     setSelectedQuiz(quizType);
@@ -91,6 +94,8 @@ const Practice: React.FC = () => {
 
   const handleStartQuiz = (config: QuizOption) => {
     if (!selectedQuiz) return;
+    
+    setModalOpen(false); // Explicitly close modal before navigating
     
     let path = '';
     if (selectedQuiz === 'anatomy') {
@@ -111,6 +116,8 @@ const Practice: React.FC = () => {
             Chọn một hình thức để bắt đầu kiểm tra và củng cố kiến thức của bạn.
         </p>
       </section>
+
+      {currentUser && <PracticeAnalytics user={currentUser} />}
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         <PracticeCard mode={practiceModes.anatomy} onStart={() => openModal('anatomy')} />

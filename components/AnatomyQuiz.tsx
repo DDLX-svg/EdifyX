@@ -83,6 +83,7 @@ const AnatomyQuiz: React.FC = () => {
   const [actualQuestionCount, setActualQuestionCount] = useState(0);
   const imageRef = useRef<HTMLImageElement>(null);
   const { currentUser, updateUserStats } = useAuth();
+  const statsUpdated = useRef(false);
 
   useEffect(() => {
     const loadAndSetupQuiz = async () => {
@@ -121,11 +122,12 @@ const AnatomyQuiz: React.FC = () => {
 
   useEffect(() => {
     const updateLocalStats = () => {
-        if (!quizFinished || !currentUser) return;
+        if (!quizFinished || !currentUser || statsUpdated.current) return;
         
         const attemptedCount = userAnswers.length;
         if (attemptedCount === 0) return;
-
+        
+        statsUpdated.current = true; // Prevent re-running
         const correctCount = userAnswers.filter(a => a.isCorrect).length;
         updateUserStats(attemptedCount, correctCount);
     };
@@ -239,7 +241,6 @@ const AnatomyQuiz: React.FC = () => {
   const currentQuestion = quizQuestions[currentQuestionIndex];
   if (!currentQuestion) return null;
   
-  const score = userAnswers.filter(a => a.isCorrect).length;
   const progressPercentage = quizQuestions.length > 0 ? ((currentQuestionIndex + 1) / quizQuestions.length) * 100 : 0;
 
   return (
@@ -271,7 +272,6 @@ const AnatomyQuiz: React.FC = () => {
                       <span>{formatTime(timeLeft)}</span>
                   </div>
                 )}
-                <div className="text-lg font-semibold text-blue-600">Điểm: {score}</div>
             </div>
 
             <div className="w-full bg-gray-200 rounded-full h-2.5 mb-6">

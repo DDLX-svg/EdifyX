@@ -1,6 +1,5 @@
-
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
-import { fetchAccounts, registerUser, resendVerificationEmail as resendVerificationEmailService, fetchArticles } from '../services/googleSheetService.ts';
+import { fetchAccounts, registerUser, resendVerificationEmail as resendVerificationEmailService, fetchArticles, updateUserQuizStats } from '../services/googleSheetService.ts';
 import type { Account } from '../types.ts';
 
 interface LoginResult {
@@ -91,30 +90,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, pass: string): Promise<LoginResult> => {
     try {
-      const accounts = await fetchAccounts();
-      const user = accounts.find(
-        (acc) => acc.Email.toLowerCase() === email.toLowerCase() && acc['Mật khẩu'] === pass
-      );
-      if (user) {
-        if (user['Đã xác minh'] !== 'Có') {
-            return {
-                success: false,
-                reason: 'unverified',
-                email: user.Email,
-                error: 'Tài khoản của bạn chưa được xác minh. Vui lòng kiểm tra email.'
-            };
+        const accounts = await fetchAccounts();
+        
+        // Find user by email, case-insensitively for better UX.
+        const normalizedInputEmail = email.trim().toLowerCase();
+        const user = accounts.find(
+            (acc) => acc.Email && acc.Email.trim().toLowerCase() === normalizedInputEmail
+        );
+
+        if (!user) {
+            // User not found. Generic error message for security.
+            return { success: false, error: 'Email hoặc mật khẩu không đúng.' };
         }
-        setCurrentUser(user);
-        sessionStorage.setItem('currentUser', JSON.stringify(user));
-        return { success: true };
-      } else {
-        return { success: false, error: 'Email hoặc mật khẩu không đúng.' };
-      }
+
+        // Retrieve the stored password.
+        const storedPassword = user['Mật khẩu'];
+
+        // Check if the stored password is a valid string.
+        if (typeof storedPassword !== 'string' || storedPassword.length === 0) {
+            console.error(`Password for user ${email} is missing or invalid.`);
+            return { success: false, error: 'Đã xảy ra lỗi với tài khoản của bạn. Vui lòng liên hệ quản trị viên.' };
+        }
+
+        // The correct, standard, and secure way to compare passwords:
+        // A direct, case-sensitive comparison without any transformations.
+        if (storedPassword === pass) {
+            if (user['Đã xác minh'] === 'Có') {
+                setCurrentUser(user);
+                sessionStorage.setItem('currentUser', JSON.stringify(user));
+                return { success: true };
+            } else {
+                // Account exists but is not verified.
+                return {
+                    success: false,
+                    reason: 'unverified',
+                    error: 'Tài khoản của bạn chưa được xác thực. Vui lòng kiểm tra email.',
+                    email: user.Email,
+                };
+            }
+        } else {
+            // Password does not match. Generic error.
+            return { success: false, error: 'Email hoặc mật khẩu không đúng.' };
+        }
+
     } catch (error) {
-      console.error('Login failed:', error);
-      return { success: false, error: 'Đã xảy ra lỗi khi đăng nhập.' };
+        console.error('Login failed:', error);
+        return { success: false, error: 'Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau.' };
     }
   };
+
 
   const logout = () => {
     setCurrentUser(null);
@@ -157,6 +181,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCurrentUser(prevUser => {
         if (!prevUser) return null;
 
+        // Optimistic UI update
         const updatedUser: Account = {
             ...prevUser,
             'Tổng số câu hỏi đã làm': (prevUser['Tổng số câu hỏi đã làm'] || 0) + attempted,
@@ -166,6 +191,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
         
         sessionStorage.setItem('currentUser', JSON.stringify(updatedUser));
+        
+        // Persist to backend (fire and forget)
+        updateUserQuizStats(prevUser.Email, attempted, correct)
+            .then(response => {
+                if (!response.success) {
+                    console.error("Failed to sync quiz stats to backend:", response.error);
+                    // Here you could implement a retry mechanism or notify the user
+                } else {
+                    console.log("Quiz stats successfully synced to backend.");
+                }
+            })
+            .catch(err => {
+                 console.error("Error calling updateUserQuizStats service:", err);
+            });
+            
         return updatedUser;
     });
   }, []);

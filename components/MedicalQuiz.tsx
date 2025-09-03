@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { fetchPharmacyQuestions, fetchMedicineQuestions } from '../services/googleSheetService.ts';
 import { useAuth } from '../contexts/AuthContext.tsx';
@@ -29,6 +29,7 @@ const MedicalQuiz: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [showReview, setShowReview] = useState(false);
+  const statsUpdated = useRef(false);
 
   useEffect(() => {
     const loadAllQuestions = async () => {
@@ -70,10 +71,10 @@ const MedicalQuiz: React.FC = () => {
   }, [timeLeft, quizFinished]);
 
   useEffect(() => {
-    // This effect now only updates the local state for the current session.
-    // The persistent update to Google Sheets has been temporarily disabled.
     const updateLocalStats = () => {
-        if (!quizFinished || !currentUser) return;
+        if (!quizFinished || !currentUser || statsUpdated.current) return;
+
+        statsUpdated.current = true; // Prevent re-running
         
         const attemptedCount = userAnswers.length;
         if (attemptedCount === 0) return;
@@ -134,6 +135,7 @@ const MedicalQuiz: React.FC = () => {
   }, [quizFinished, selectedOption, handleSubmitAnswer]);
   
   const restartQuiz = () => {
+    statsUpdated.current = false; // Reset stats update flag
     setUserAnswers([]);
     setCurrentQuestionIndex(0);
     setQuizFinished(false);
@@ -251,7 +253,6 @@ const MedicalQuiz: React.FC = () => {
   
   const actualQuestionCount = Math.min(config.questions, allQuestions.length);
   const quizTitle = specialty === 'pharmacy' ? 'Luyện tập Dược học' : 'Luyện tập Y đa khoa';
-  const score = userAnswers.filter(a => a.isCorrect).length;
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -273,7 +274,6 @@ const MedicalQuiz: React.FC = () => {
                 <span>{formatTime(timeLeft)}</span>
             </div>
             )}
-            <div className="text-lg font-semibold text-blue-600">Điểm: {score}</div>
         </div>
         <p className="text-lg font-semibold mb-6 min-h-[6rem]">{currentQuestion.Question_Text}</p>
         

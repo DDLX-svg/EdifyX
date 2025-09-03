@@ -5,7 +5,7 @@ const SHEET_ID = '1GMdIGBbcTgj2cLA5Ux-_X3KLGhAwYcgc08r2TjzKFVs';
 const BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=`;
 
 // This is the correct, user-provided Google Apps Script URL.
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzS6srMo8uHm3GyBTbXzS3SQzTHla1-Xdq-H4SqPL8OJdY56B-H9R-CER996HN00ey8cQ/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzcry1cSDN55wRhVCBT3jLyzg2c66tEYBgi1YZVzx70VIMF8b7VzXcXbfBW5mywHJWRoA/exec';
 const fetchData = async <T,>(sheetName: string): Promise<T[]> => {
   const url = `${BASE_URL}${encodeURIComponent(sheetName)}&t=${new Date().getTime()}`;
   const response = await fetch(url);
@@ -248,29 +248,26 @@ export const resendVerificationEmail = async (email: string): Promise<{ success:
 };
 
 /**
- * [TẠM VÔ HIỆU HÓA]
  * Gửi kết quả của bài thi gần nhất lên backend.
  * Backend sẽ chịu trách nhiệm cộng điểm vào tổng và tuần.
  */
-// export const updateUserQuizStats = async (
-//     email: string, 
-//     username: string, 
-//     questionsAttempted: number, 
-//     questionsCorrect: number
-// ): Promise<{ success: boolean; error?: string }> => {
-//     try {
-//         const result = await postToAppsScript({
-//             action: 'updateLatestQuizScore',
-//             'Email': email,
-//             'Tên tài khoản': username,
-//             'Tổng số câu bài thi mới nhất': questionsAttempted,
-//             'Tổng số câu làm đúng bài thi mới nhất': questionsCorrect,
-//         });
-//         if (result.status === 'success') {
-//             return { success: true };
-//         }
-//         return { success: false, error: result.message || 'Lỗi không xác định khi cập nhật điểm.' };
-//     } catch (error: any) {
-//         return { success: false, error: error.message };
-//     }
-// };
+export const updateUserQuizStats = async (
+    email: string, 
+    questionsAttempted: number, 
+    questionsCorrect: number
+): Promise<{ success: boolean; error?: string }> => {
+    try {
+        const result = await postToAppsScript({
+            action: 'updateQuizStats',
+            email: email,
+            questionsAttempted: questionsAttempted,
+            questionsCorrect: questionsCorrect,
+        });
+        if (result.status === 'success') {
+            return { success: true };
+        }
+        return { success: false, error: result.message || 'Lỗi không xác định khi cập nhật điểm.' };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+};

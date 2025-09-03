@@ -17,412 +17,290 @@ const getPracticeBadge = (user: Account): Badge => {
 
     // Special roles override other badges
     if (user['Danh hiệu'] === 'Developer') {
-        return { name: 'Developer', description: 'Người xây dựng và phát triển hệ thống SuniMed.', icon: 'settings', color: 'bg-gray-800' };
+        return { name: 'Developer', description: 'Người xây dựng và phát triển hệ thống SuniMed.', icon: 'laptop', color: 'bg-gray-800' };
     }
     if (user['Danh hiệu'] === 'Admin') {
-        return { name: 'Quản trị viên', description: 'Quản lý và duy trì nội dung của SuniMed.', icon: 'admin', color: 'bg-red-600' };
+        return { name: 'Quản trị viên', description: 'Quản lý và duy trì nội dung của SuniMed.', icon: 'shield', color: 'bg-red-600' };
+    }
+    if (user['Danh hiệu'] === 'Bác sĩ chuyên ngành') {
+        return { name: 'Bác sĩ chuyên ngành', description: 'Chuyên gia y khoa với kiến thức và kinh nghiệm sâu rộng trong một lĩnh vực cụ thể.', icon: 'stethoscope', color: 'bg-cyan-600' };
+    }
+    if (user['Danh hiệu'] === 'Dược sĩ chuyên ngành') {
+        return { name: 'Dược sĩ chuyên ngành', description: 'Chuyên gia về dược phẩm, đảm bảo việc sử dụng thuốc an toàn và hiệu quả.', icon: 'pill', color: 'bg-lime-600' };
+    }
+    if (user['Danh hiệu'] === 'Nhà khoa học trẻ') {
+        return { name: 'Nhà khoa học trẻ', description: 'Một tài năng trẻ có nhiều đóng góp và tiềm năng trong lĩnh vực nghiên cứu khoa học.', icon: 'beaker', color: 'bg-teal-500' };
     }
     if (user['Danh hiệu'] === 'Cộng tác viên') {
-        return { name: 'Cộng tác viên', description: 'Dành cho những thành viên tích cực đóng góp tài liệu chất lượng cho cộng đồng.', icon: 'users', color: 'bg-pink-500' };
+        return { name: 'Cộng tác viên', description: 'Dành cho những thành viên tích cực đóng góp tài liệu chất lượng cho cộng đồng.', icon: 'handshake', color: 'bg-pink-500' };
     }
     if (user['Danh hiệu'] === 'Đại sứ SuniMed') {
-        return { name: 'Đại sứ SuniMed', description: 'Người đại diện cho giá trị và tinh thần của cộng đồng SuniMed.', icon: 'megaphone', color: 'bg-fuchsia-600' };
+        return { name: 'Đại sứ SuniMed', description: 'Người đại diện cho giá trị và tinh thần của cộng đồng SuniMed.', icon: 'globe', color: 'bg-fuchsia-600' };
     }
     
     // Achievement-based badges (ordered by prestige)
     if (total > 200 && accuracy >= 98) {
-        return { name: 'Siêu Chính Xác', description: 'Đạt độ chính xác trên 98% với hơn 200 câu hỏi.', icon: 'target', color: 'bg-rose-500' };
+        return { name: 'Siêu Chính Xác', description: 'Đạt độ chính xác trên 98% với hơn 200 câu hỏi.', icon: 'sparkles', color: 'bg-rose-500' };
     }
     if (total > 50 && accuracy >= 95) {
-        return { name: 'Bậc Thầy Chính Xác', description: 'Đạt độ chính xác trên 95% với hơn 50 câu hỏi.', icon: 'star', color: 'bg-amber-500' };
+        return { name: 'Bậc Thầy Chính Xác', description: 'Đạt độ chính xác trên 95% với hơn 50 câu hỏi.', icon: 'target', color: 'bg-amber-500' };
     }
      if (total >= 1000) {
-        return { name: 'Huyền Thoại Sống', description: 'Đã chinh phục hơn 1000 câu hỏi trên hệ thống.', icon: 'trophy-solid', color: 'bg-violet-600' };
+        return { name: 'Huyền Thoại Sống', description: 'Đã chinh phục hơn 1000 câu hỏi trên hệ thống.', icon: 'crown', color: 'bg-violet-600' };
     }
     if (total >= 500) {
-        return { name: 'Lão Làng SuniMed', description: 'Đã chinh phục hơn 500 câu hỏi trên hệ thống.', icon: 'trophy', color: 'bg-purple-600' };
+        return { name: 'Lão Làng SuniMed', description: 'Đã chinh phục hơn 500 câu hỏi trên hệ thống.', icon: 'building', color: 'bg-purple-600' };
     }
     if (total >= 200) {
-        return { name: 'Chiến Binh Tri Thức', description: 'Đã hoàn thành hơn 200 câu hỏi.', icon: 'practice', color: 'bg-blue-500' };
+        return { name: 'Chiến Binh Tri Thức', description: 'Đã hoàn thành hơn 200 câu hỏi.', icon: 'swords', color: 'bg-blue-500' };
     }
     if (total >= 50) {
-        return { name: 'Học Viên Chăm Chỉ', description: 'Hoàn thành 50 câu hỏi đầu tiên.', icon: 'academic-cap', color: 'bg-teal-500' };
+        return { name: 'Học Viên Chăm Chỉ', description: 'Hoàn thành 50 câu hỏi đầu tiên.', icon: 'book', color: 'bg-teal-500' };
     }
     
-    return { name: 'Tân Binh', description: 'Bắt đầu hành trình chinh phục kiến thức.', icon: 'user', color: 'bg-green-500' };
+    return { name: 'Tân Binh', description: 'Bắt đầu hành trình chinh phục kiến thức.', icon: 'backpack', color: 'bg-green-500' };
 };
 
 // Determines the research-related badge for a user
 const getResearchBadge = (approvedArticleCount: number): Badge | null => {
-    if (approvedArticleCount >= 50) {
-        return { name: 'Nhà Khoa Học Tiên Phong', description: 'Đóng góp 50+ công trình nghiên cứu khoa học.', icon: 'rocket', color: 'bg-slate-700' };
+    if (approvedArticleCount >= 250) {
+        return { name: 'Siêu thiên tài', description: 'Đóng góp 250+ công trình nghiên cứu, một trí tuệ phi thường.', icon: 'galaxy', color: 'bg-red-700' };
     }
-    if (approvedArticleCount >= 20) {
-        return { name: 'Giáo Sư', description: 'Đóng góp 20+ công trình nghiên cứu khoa học.', icon: 'academic-cap-solid', color: 'bg-cyan-600' };
+    if (approvedArticleCount >= 150) {
+        return { name: 'Nhà bác học', description: 'Đóng góp 150+ công trình nghiên cứu, định hình lại kiến thức y khoa.', icon: 'brain', color: 'bg-slate-700' };
+    }
+    if (approvedArticleCount >= 100) {
+        return { name: 'Giáo sư', description: 'Đóng góp 100+ công trình nghiên cứu khoa học, một học giả uyên bác.', icon: 'trophy-solid', color: 'bg-fuchsia-600' };
+    }
+    if (approvedArticleCount >= 75) {
+        return { name: 'Phó giáo sư', description: 'Đóng góp 75+ công trình nghiên cứu khoa học, đạt được thành tựu đáng kể.', icon: 'trophy', color: 'bg-purple-600' };
+    }
+    if (approvedArticleCount >= 50) {
+        return { name: 'Nhà Khoa học Chuyên nghiệp', description: 'Đóng góp 50+ công trình nghiên cứu khoa học.', icon: 'beaker', color: 'bg-indigo-600' };
+    }
+    if (approvedArticleCount >= 25) {
+        return { name: 'Tiến sĩ', description: 'Đóng góp 25+ công trình nghiên cứu khoa học.', icon: 'trophy', color: 'bg-cyan-600' };
     }
     if (approvedArticleCount >= 10) {
-        return { name: 'Tiến Sĩ', description: 'Đóng góp 10+ công trình nghiên cứu khoa học.', icon: 'beaker', color: 'bg-indigo-600' };
+        return { name: 'Thạc sĩ', description: 'Đóng góp 10+ công trình nghiên cứu khoa học.', icon: 'academic-cap', color: 'bg-sky-500' };
     }
     if (approvedArticleCount >= 5) {
-        return { name: 'Học Giả', description: 'Đóng góp 5+ công trình nghiên cứu cho cộng đồng.', icon: 'book', color: 'bg-sky-500' };
+        return { name: 'Học Giả', description: 'Đóng góp 5+ công trình nghiên cứu cho cộng đồng.', icon: 'scroll', color: 'bg-blue-500' };
     }
     if (approvedArticleCount >= 1) {
-        return { name: 'Nhà Nghiên cứu', description: 'Có bài báo khoa học đầu tiên được phê duyệt.', icon: 'document', color: 'bg-orange-500' };
+        return { name: 'Nhà Nghiên cứu', description: 'Có bài báo khoa học đầu tiên được phê duyệt.', icon: 'microscope', color: 'bg-orange-500' };
     }
     
     return null; // No research badge if no approved articles
 };
 
-// --- Components ---
-
-const BadgeDisplayCard: React.FC<{ badge: Badge | null, title: string }> = ({ badge, title }) => {
-    if (!badge) {
-        return (
-            <div className="bg-white p-4 rounded-xl flex items-center gap-4 h-full border-l-4 border-gray-200 shadow-sm">
-                <div className="p-3 rounded-full bg-gray-300">
-                    <Icon name="question" className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                    <p className="text-sm font-semibold text-gray-500">{title}</p>
-                    <p className="text-sm text-gray-500">Chưa có thành tích</p>
-                </div>
-            </div>
-        );
-    }
-    
-    // Convert Tailwind color to a hex value for the border
-    const colorMap: {[key: string]: string} = {
-        'bg-gray-800': '#1F2937', 'bg-red-600': '#DC2626', 'bg-amber-500': '#F59E0B',
-        'bg-purple-600': '#9333EA', 'bg-blue-500': '#3B82F6', 'bg-teal-500': '#14B8A6',
-        'bg-green-500': '#22C55E', 'bg-indigo-600': '#4F46E5', 'bg-sky-500': '#0EA5E9',
-        'bg-orange-500': '#F97316', 'bg-rose-500': '#F43F5E', 'bg-violet-600': '#7C3AED',
-        'bg-slate-700': '#334155', 'bg-cyan-600': '#0891B2', 'bg-pink-500': '#EC4899',
-        'bg-fuchsia-600': '#C026D3'
-    };
-    const borderColor = colorMap[badge.color] || badge.color;
-
-    return (
-        <div className="bg-white p-4 rounded-xl flex items-center gap-4 border-l-4 shadow-sm" style={{ borderColor }}>
-             <div className={`p-3 rounded-full ${badge.color}`}>
-                <Icon name={badge.icon} className="w-6 h-6 text-white" />
-            </div>
-            <div>
-                <p className="text-sm text-gray-500">{title}</p>
-                <p className="text-lg font-bold text-gray-800">{badge.name}</p>
-                <p className="text-xs text-gray-600 mt-1">{badge.description}</p>
-            </div>
+const BadgePill: React.FC<{ badge: Badge }> = ({ badge }) => (
+    <div className="relative group">
+        <div className={`inline-flex items-center gap-1.5 py-0.5 px-2 rounded-full ${badge.color} cursor-pointer`}>
+            <Icon name={badge.icon} className="w-3 h-3 text-white" />
+            <span className="text-xs font-semibold text-white whitespace-nowrap">{badge.name}</span>
         </div>
-    );
-};
-
-const CircularProgress: React.FC<{
-  percentage: number;
-  size?: number;
-  strokeWidth?: number;
-  colorClass?: string;
-}> = ({
-  percentage,
-  size = 120,
-  strokeWidth = 10,
-  colorClass = 'text-blue-500'
-}) => {
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-  // Ensure percentage is between 0 and 100
-  const clampedPercentage = Math.max(0, Math.min(percentage, 100));
-  const offset = circumference - (clampedPercentage / 100) * circumference;
-
-  return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <svg className="w-full h-full" viewBox={`0 0 ${size} ${size}`}>
-        <circle
-          className="text-gray-200"
-          strokeWidth={strokeWidth}
-          stroke="currentColor"
-          fill="transparent"
-          r={radius}
-          cx={size / 2}
-          cy={size / 2}
-        />
-        <circle
-          className={`transform -rotate-90 origin-center transition-all duration-700 ease-out ${colorClass}`}
-          strokeWidth={strokeWidth}
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          stroke="currentColor"
-          fill="transparent"
-          r={radius}
-          cx={size / 2}
-          cy={size / 2}
-        />
-      </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-xl font-bold text-gray-700">
-        {`${Math.round(clampedPercentage)}%`}
-      </span>
+        <div role="tooltip" className="absolute bottom-full mb-2 w-max max-w-xs left-1/2 -translate-x-1/2 p-2 bg-gray-800 text-white text-xs rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-300 pointer-events-none z-10">
+            {badge.description}
+            <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-800"></div>
+        </div>
     </div>
-  );
-};
+);
+
+
+const StatCard: React.FC<{ icon: string; value: string | number; label: string; colorClass: string; }> = ({ icon, value, label, colorClass }) => (
+    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+        <div className={`p-3 rounded-full ${colorClass}`}>
+            <Icon name={icon} className="w-6 h-6 text-white" />
+        </div>
+        <div>
+            <p className="text-2xl font-bold text-gray-800">{value}</p>
+            <p className="text-sm text-gray-500">{label}</p>
+        </div>
+    </div>
+);
 
 
 const Profile: React.FC = () => {
-  const { email } = useParams<{ email: string }>();
-  const { currentUser } = useAuth();
-  const [profileUser, setProfileUser] = useState<Account | null>(null);
-  const [userArticles, setUserArticles] = useState<ScientificArticle[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [articleFilter, setArticleFilter] = useState<'All' | 'Pending' | 'Approved' | 'Rejected'>('All');
+    const { email } = useParams<{ email: string }>();
+    const { currentUser } = useAuth();
+    const [profileUser, setProfileUser] = useState<Account | null>(null);
+    const [userArticles, setUserArticles] = useState<ScientificArticle[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-  const parseVNDate = (dateStr?: string): number => {
-    if (!dateStr || typeof dateStr !== 'string') return 0;
-    const parts = dateStr.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})(?: (\d{2}):(\d{2}):(\d{2}))?/);
-    if (!parts) {
-        const parsed = Date.parse(dateStr);
-        return isNaN(parsed) ? 0 : parsed;
+    useEffect(() => {
+        const loadProfileData = async () => {
+            if (!email) {
+                setError("Email người dùng không hợp lệ.");
+                setIsLoading(false);
+                return;
+            }
+            try {
+                setIsLoading(true);
+                const [accounts, articles] = await Promise.all([
+                    fetchAccounts(),
+                    fetchArticles()
+                ]);
+
+                const foundUser = accounts.find(acc => acc.Email.toLowerCase() === email.toLowerCase());
+                if (foundUser) {
+                    setProfileUser(foundUser);
+                    const foundArticles = articles.filter(art => art.SubmitterEmail.toLowerCase() === email.toLowerCase());
+                    setUserArticles(foundArticles);
+                } else {
+                    setError("Không tìm thấy người dùng.");
+                }
+            } catch (err) {
+                setError("Không thể tải dữ liệu hồ sơ.");
+                console.error(err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadProfileData();
+    }, [email]);
+
+    const { practiceBadge, researchBadge, mainBadge, allBadges, weeklyStats, totalStats } = useMemo(() => {
+        if (!profileUser) {
+            // FIX: Provide a default structure for stats objects to prevent type errors when accessing their properties.
+            return { practiceBadge: null, researchBadge: null, mainBadge: null, allBadges: [], weeklyStats: { attempted: 0, correct: 0, accuracy: 0 }, totalStats: { attempted: 0, correct: 0, accuracy: 0 } };
+        }
+
+        const practice = getPracticeBadge(profileUser);
+        const approvedCount = userArticles.filter(art => art.Status === 'Approved').length;
+        const research = getResearchBadge(approvedCount);
+        
+        const main = research || practice;
+        const badges = [research, practice].filter(Boolean) as Badge[];
+
+        const weekly = {
+            attempted: profileUser['Tổng số câu hỏi đã làm trong tuần'] || 0,
+            correct: profileUser['Tổng số câu hỏi đã làm đúng trong tuần'] || 0,
+            accuracy: (profileUser['Tổng số câu hỏi đã làm trong tuần'] || 0) > 0
+                ? ((profileUser['Tổng số câu hỏi đã làm đúng trong tuần'] || 0) / profileUser['Tổng số câu hỏi đã làm trong tuần']) * 100
+                : 0
+        };
+
+        const total = {
+            attempted: profileUser['Tổng số câu hỏi đã làm'] || 0,
+            correct: profileUser['Tổng số câu hỏi đã làm đúng'] || 0,
+            accuracy: (profileUser['Tổng số câu hỏi đã làm'] || 0) > 0
+                ? ((profileUser['Tổng số câu hỏi đã làm đúng'] || 0) / profileUser['Tổng số câu hỏi đã làm']) * 100
+                : 0
+        };
+
+        return { practiceBadge: practice, researchBadge: research, mainBadge: main, allBadges: badges, weeklyStats: weekly, totalStats: total };
+    }, [profileUser, userArticles]);
+
+    if (isLoading) {
+        return <div className="flex justify-center items-center h-96"><div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div></div>;
     }
-    const day = parseInt(parts[1], 10);
-    const month = parseInt(parts[2], 10) - 1;
-    const year = parseInt(parts[3], 10);
-    const hour = parseInt(parts[4], 10) || 0;
-    const minute = parseInt(parts[5], 10) || 0;
-    const second = parseInt(parts[6], 10) || 0;
-    const date = new Date(year, month, day, hour, minute, second);
-    return isNaN(date.getTime()) ? 0 : date.getTime();
-  };
 
-  useEffect(() => {
-    const loadProfile = async () => {
-      if (!email) {
-        setError('Không tìm thấy email người dùng.');
-        setIsLoading(false);
-        return;
-      }
-      setIsLoading(true);
-      try {
-        const [accounts, articles] = await Promise.all([fetchAccounts(), fetchArticles()]);
-        const user = accounts.find(acc => acc.Email.toLowerCase() === email.toLowerCase());
-        if (user) {
-          setProfileUser(user);
-          const articlesByUser = articles.filter(art => art.SubmitterEmail.toLowerCase() === email.toLowerCase());
-          setUserArticles(articlesByUser);
-        } else {
-          setError('Không tìm thấy hồ sơ người dùng.');
+    if (error || !profileUser) {
+        return <div className="text-center p-10 text-red-500 bg-red-50 rounded-lg">{error || "Không thể hiển thị hồ sơ."}</div>;
+    }
+
+    const getStatusPill = (status: string) => {
+        switch (status) {
+            case 'Approved': return <span className="text-xs font-medium bg-green-100 text-green-800 px-2.5 py-0.5 rounded-full">Đã duyệt</span>;
+            case 'Pending': return <span className="text-xs font-medium bg-yellow-100 text-yellow-800 px-2.5 py-0.5 rounded-full">Chờ duyệt</span>;
+            case 'Rejected': return <span className="text-xs font-medium bg-red-100 text-red-800 px-2.5 py-0.5 rounded-full">Bị từ chối</span>;
+            default: return <span className="text-xs font-medium bg-gray-100 text-gray-800 px-2.5 py-0.5 rounded-full">{status}</span>;
         }
-      } catch (err) {
-        setError('Lỗi khi tải dữ liệu hồ sơ.');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
     };
-    loadProfile();
-  }, [email]);
-  
-  const processedArticles = useMemo(() => {
-    const statusOrder = {
-        'Pending': 1,
-        'Approved': 2,
-        'Rejected': 3,
-    };
-    const sorted = [...userArticles].sort((a, b) => {
-        const orderA = statusOrder[a.Status as keyof typeof statusOrder] || 99;
-        const orderB = statusOrder[b.Status as keyof typeof statusOrder] || 99;
-        if (orderA !== orderB) return orderA - orderB;
-        return parseVNDate(b.SubmissionDate) - parseVNDate(a.SubmissionDate);
-    });
-    if (articleFilter === 'All') return sorted;
-    return sorted.filter(art => art.Status === articleFilter);
-  }, [userArticles, articleFilter]);
-  
-  const articleCounts = useMemo(() => {
-    return userArticles.reduce((acc, article) => {
-        const status = article.Status as keyof typeof acc;
-        if (acc[status] !== undefined) {
-            acc[status]++;
-        }
-        acc.All++;
-        return acc;
-    }, { All: 0, Pending: 0, Approved: 0, Rejected: 0 });
-  }, [userArticles]);
 
-
-  if (isLoading) {
     return (
-        <div className="flex justify-center items-center h-96">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="max-w-7xl mx-auto space-y-8">
+            <section className="bg-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row items-center gap-6">
+                <div className="relative flex-shrink-0">
+                    <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-green-100 rounded-full flex items-center justify-center">
+                        <Icon name="user" className="w-12 h-12 text-blue-500" />
+                    </div>
+                    {mainBadge && (
+                         <div className={`absolute -bottom-2 -right-2 p-2 rounded-full ${mainBadge.color} shadow-md`}>
+                            <Icon name={mainBadge.icon} className="w-5 h-5 text-white" />
+                        </div>
+                    )}
+                </div>
+                <div className="flex-grow text-center md:text-left">
+                    <h1 className="text-3xl font-bold text-gray-800">{profileUser['Tên tài khoản']}</h1>
+                    <p className="text-md text-gray-500">{profileUser['Vai trò']}</p>
+                    <div className="flex gap-2 justify-center md:justify-start mt-2">
+                        {allBadges.map(badge => <BadgePill key={badge.name} badge={badge} />)}
+                    </div>
+                </div>
+                {mainBadge && (
+                    <div className="bg-gray-50 p-4 rounded-lg text-center md:text-left flex-shrink-0">
+                        <p className="text-sm font-bold text-gray-700">DANH HIỆU NỔI BẬT</p>
+                        <div className="flex items-center gap-2 mt-2">
+                             <div className={`p-2 rounded-full ${mainBadge.color}`}>
+                                <Icon name={mainBadge.icon} className="w-5 h-5 text-white" />
+                            </div>
+                            <div>
+                                <p className="font-semibold text-gray-900">{mainBadge.name}</p>
+                                <p className="text-xs text-gray-500">{mainBadge.description}</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </section>
+            
+            <section>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">Thành tích</h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="bg-gray-50/70 p-6 rounded-xl space-y-4">
+                        <h3 className="font-semibold text-gray-700 flex items-center gap-2"><Icon name="flame" className="w-5 h-5 text-orange-500" />Thành tích tuần này</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <StatCard icon="question" value={weeklyStats.attempted} label="Câu đã làm" colorClass="bg-blue-500" />
+                            <StatCard icon="checkmark" value={weeklyStats.correct} label="Câu đúng" colorClass="bg-green-500" />
+                            <StatCard icon="target" value={`${weeklyStats.accuracy.toFixed(0)}%`} label="Chính xác" colorClass="bg-amber-500" />
+                        </div>
+                    </div>
+                    <div className="bg-gray-50/70 p-6 rounded-xl space-y-4">
+                        <h3 className="font-semibold text-gray-700 flex items-center gap-2"><Icon name="trophy" className="w-5 h-5 text-purple-500" />Thành tích tổng</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <StatCard icon="question" value={totalStats.attempted} label="Câu đã làm" colorClass="bg-sky-500" />
+                            <StatCard icon="checkmark" value={totalStats.correct} label="Câu đúng" colorClass="bg-emerald-500" />
+                            <StatCard icon="target" value={`${totalStats.accuracy.toFixed(0)}%`} label="Chính xác" colorClass="bg-indigo-500" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">Bài báo đã đăng ({userArticles.length})</h2>
+                {userArticles.length > 0 ? (
+                    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <ul className="divide-y divide-gray-200">
+                            {userArticles.map(article => (
+                                <li key={article.ID} className="p-4 hover:bg-gray-50 transition-colors">
+                                    <Link to={`/article/${article.ID}`} className="block">
+                                        <div className="flex items-center justify-between">
+                                            <p className="font-semibold text-blue-700 truncate pr-4">{article.Title}</p>
+                                            {getStatusPill(article.Status)}
+                                        </div>
+                                        <div className="flex justify-between items-baseline mt-2">
+                                            <p className="text-sm text-gray-500">{article.Category}</p>
+                                            <p className="text-sm text-gray-400">{article.SubmissionDate.split(' ')[0]}</p>
+                                        </div>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ) : (
+                    <div className="text-center py-12 px-4 bg-gray-50 rounded-lg">
+                        <Icon name="document" className="w-12 h-12 mx-auto text-gray-400" />
+                        <h3 className="mt-4 text-lg font-semibold text-gray-800">Chưa có bài báo nào</h3>
+                        <p className="mt-1 text-gray-500">
+                            Người dùng này chưa đăng tải công trình nghiên cứu nào.
+                        </p>
+                    </div>
+                )}
+            </section>
         </div>
     );
-  }
-
-  if (error || !profileUser) {
-    return (
-        <div className="text-center p-10 bg-red-50 rounded-lg max-w-md mx-auto">
-            <Icon name="x-circle" className="w-12 h-12 mx-auto text-red-400" />
-            <h2 className="mt-4 text-xl font-bold text-red-800">Không thể tải hồ sơ</h2>
-            <p className="mt-2 text-red-700">{error || 'Người dùng không tồn tại.'}</p>
-            <Link to="/" className="mt-6 inline-block bg-blue-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-blue-700">
-                Về trang chủ
-            </Link>
-        </div>
-    );
-  }
-  
-  const totalQuestions = profileUser['Tổng số câu hỏi đã làm'];
-  const correctQuestions = profileUser['Tổng số câu hỏi đã làm đúng'];
-  const accuracy = totalQuestions > 0 ? (correctQuestions / totalQuestions) * 100 : 0;
-  
-  const weeklyQuestions = profileUser['Tổng số câu hỏi đã làm trong tuần'];
-  const weeklyCorrectQuestions = profileUser['Tổng số câu hỏi đã làm đúng trong tuần'];
-  const weeklyAccuracy = weeklyQuestions > 0 ? (weeklyCorrectQuestions / weeklyQuestions) * 100 : 0;
-  
-  const practiceBadge = getPracticeBadge(profileUser);
-  const researchBadge = getResearchBadge(articleCounts.Approved);
-  const isOwner = currentUser?.Email.toLowerCase() === profileUser.Email.toLowerCase();
-
-
-  const filterTabs: { id: typeof articleFilter, name: string }[] = [
-    { id: 'All', name: 'Tất cả' },
-    { id: 'Pending', name: 'Chờ duyệt' },
-    { id: 'Approved', name: 'Đã duyệt' },
-    { id: 'Rejected', name: 'Bị từ chối' }
-  ];
-
-  return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {/* Main Profile Card */}
-      <div className="bg-white p-8 rounded-2xl shadow-lg flex flex-col md:flex-row items-center gap-8">
-         <div className="flex-shrink-0 relative">
-          <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-green-400 rounded-full flex items-center justify-center text-white text-5xl font-bold border-4 border-gray-100">
-            {profileUser['Tên tài khoản'].charAt(0).toUpperCase()}
-          </div>
-        </div>
-        <div className="text-center md:text-left flex-grow">
-          <h1 className="text-4xl font-extrabold text-gray-800">{profileUser['Tên tài khoản']}</h1>
-          <p className="text-lg text-gray-500 mt-1">{profileUser['Gói đăng ký']}</p>
-          <p className="text-gray-400 mt-2">{profileUser.Email}</p>
-        </div>
-      </div>
-
-      {/* Achievements & Stats Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Stats Column */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-lg">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Tổng quan thành tích</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Overall Accuracy */}
-            <div className="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center text-center">
-              <CircularProgress percentage={accuracy} colorClass="text-blue-500" />
-              <p className="mt-3 font-bold text-gray-700">Tỷ lệ chính xác tổng thể</p>
-            </div>
-            {/* Weekly Accuracy */}
-            <div className="bg-gray-50 p-4 rounded-xl flex flex-col items-center justify-center text-center">
-              <CircularProgress percentage={weeklyAccuracy} colorClass="text-green-500" />
-              <p className="mt-3 font-bold text-gray-700">Tỷ lệ chính xác (Tuần)</p>
-            </div>
-            {/* Total Questions */}
-            <div className="bg-gray-50 p-6 rounded-xl">
-              <Icon name="question" className="w-8 h-8 text-blue-500 mb-2" />
-              <p className="text-sm text-gray-500">Tổng câu đã làm</p>
-              <p className="text-3xl font-bold text-gray-800">{totalQuestions.toLocaleString()}</p>
-            </div>
-            {/* Weekly Questions */}
-            <div className="bg-gray-50 p-6 rounded-xl">
-              <Icon name="flame" className="w-8 h-8 text-red-500 mb-2" />
-              <p className="text-sm text-gray-500">Câu đã làm (Tuần)</p>
-              <p className="text-3xl font-bold text-gray-800">{weeklyQuestions.toLocaleString()}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Badges Column */}
-        <div className="space-y-6">
-            <BadgeDisplayCard badge={practiceBadge} title="Thành tích Luyện tập" />
-            <BadgeDisplayCard badge={researchBadge} title="Thành tích Nghiên cứu" />
-        </div>
-      </div>
-      
-      {/* Activity Card */}
-       <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Hoạt động khoa học</h2>
-            <div className="border-b border-gray-200">
-                <nav className="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
-                     {filterTabs.map(tab => (
-                        <button 
-                            key={tab.id}
-                            onClick={() => setArticleFilter(tab.id)}
-                            className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                                articleFilter === tab.id
-                                ? 'border-blue-500 text-blue-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                            }`}
-                        >
-                            {tab.name} <span className={`ml-1.5 rounded-full px-2 py-0.5 text-xs ${articleFilter === tab.id ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'}`}>{articleCounts[tab.id]}</span>
-                        </button>
-                    ))}
-                </nav>
-            </div>
-            {processedArticles.length > 0 ? (
-                 <div className="mt-4 space-y-4">
-                    {processedArticles.map(article => {
-                        const statusConfig = {
-                            'Approved': { text: 'Đã duyệt', color: 'bg-green-100 text-green-800' },
-                            'Pending': { text: 'Chờ duyệt', color: 'bg-yellow-100 text-yellow-800' },
-                            'Rejected': { text: 'Bị từ chối', color: 'bg-red-100 text-red-800' }
-                        };
-                        const statusInfo = statusConfig[article.Status as keyof typeof statusConfig] || { text: article.Status, color: 'bg-gray-100 text-gray-800' };
-
-                        const Wrapper = ({children}: {children: React.ReactNode}) => 
-                            article.Status === 'Approved' ? 
-                            <Link to={`/article/${article.ID}`} className="block p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">{children}</Link> :
-                            <div className="p-4 rounded-lg bg-gray-50">{children}</div>;
-                        
-                        return (
-                             <Wrapper key={article.ID}>
-                                <div className="flex justify-between items-start gap-4">
-                                    <div>
-                                        <p className={`font-bold ${article.Status === 'Approved' ? 'text-blue-700 hover:underline' : 'text-gray-800'}`}>{article.Title}</p>
-                                        <p className="text-sm text-gray-600 mt-1">{article.Authors}</p>
-                                    </div>
-                                    <span className={`flex-shrink-0 text-xs font-medium px-2.5 py-1 rounded-full ${statusInfo.color}`}>{statusInfo.text}</span>
-                                </div>
-                                <div className="text-xs text-gray-400 mt-2 flex justify-between items-center">
-                                    <span>{article.SubmissionDate.split(' ')[0]}</span>
-                                    <span className="font-mono">SM_DOI: {article.SM_DOI}</span>
-                                </div>
-                                {isOwner && article.Feedback && (
-                                    <div className="mt-3 bg-blue-50 p-3 rounded-md border-l-4 border-blue-400">
-                                        <p className="text-sm font-semibold text-blue-800 flex items-center gap-2">
-                                            <Icon name="feedback" className="w-4 h-4" />
-                                            Phản hồi từ Admin:
-                                        </p>
-                                        <p className="text-sm text-blue-700 whitespace-pre-wrap mt-1">{article.Feedback}</p>
-                                    </div>
-                                )}
-                            </Wrapper>
-                        )
-                    })}
-                </div>
-            ) : (
-                <div className="text-center py-16 text-gray-500 bg-gray-50 rounded-b-lg mt-4">
-                    <Icon name="beaker" className="w-16 h-16 mx-auto text-gray-300" />
-                    <h3 className="mt-4 text-lg font-semibold text-gray-700">
-                        {userArticles.length === 0 ? "Chưa có hoạt động" : "Không có bài báo phù hợp"}
-                    </h3>
-                    <p className="mt-1">
-                        {userArticles.length === 0 
-                            ? "Người dùng này chưa đăng bài báo khoa học nào."
-                            : `Không có bài báo nào ở trạng thái "${filterTabs.find(t => t.id === articleFilter)?.name}".`
-                        }
-                    </p>
-                     <Link to="/articles/submit" className="mt-4 inline-block bg-blue-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-blue-700">
-                        Đóng góp ngay
-                    </Link>
-                </div>
-            )}
-        </div>
-    </div>
-  );
 };
 
 export default Profile;

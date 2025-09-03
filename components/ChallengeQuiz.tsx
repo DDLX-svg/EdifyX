@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { fetchAllQuestions } from '../services/googleSheetService.ts';
 import { useAuth } from '../contexts/AuthContext.tsx';
@@ -34,6 +34,7 @@ const ChallengeQuiz: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [timeLeft, setTimeLeft] = useState<number | null>(null);
+    const statsUpdated = useRef(false);
 
     useEffect(() => {
         const loadQuestions = async () => {
@@ -71,11 +72,10 @@ const ChallengeQuiz: React.FC = () => {
     }, [timeLeft, quizFinished]);
 
     useEffect(() => {
-        // This effect now only updates the local state for the current session.
-        // The persistent update to Google Sheets has been temporarily disabled.
         const updateLocalStats = () => {
-            if (!quizFinished || !currentUser) return;
+            if (!quizFinished || !currentUser || statsUpdated.current) return;
             
+            statsUpdated.current = true; // Prevent re-running
             const attempted = userAnswers.length;
             if (attempted === 0) return;
 
@@ -185,7 +185,6 @@ const ChallengeQuiz: React.FC = () => {
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold text-gray-800">Câu {currentQuestionIndex + 1}/{quizQuestions.length}</h2>
                     {timeLeft !== null && <div className="flex items-center gap-2 text-lg font-semibold text-red-500 bg-red-50 px-3 py-1 rounded-full"><Icon name="clock" className="w-5 h-5" /><span>{formatTime(timeLeft)}</span></div>}
-                    <div className="text-lg font-semibold text-blue-600">Điểm: {score}</div>
                 </div>
                 
                 <QuestionDisplay question={currentQuestion} />

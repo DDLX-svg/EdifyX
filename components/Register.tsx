@@ -18,6 +18,8 @@ const Register: React.FC = () => {
   const [role, setRole] = useState('Học sinh');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordCriteria, setPasswordCriteria] = useState({
@@ -150,14 +152,22 @@ const Register: React.FC = () => {
                 <option value="Nhà báo (nhà tuyển dụng)">Nhà báo (nhà tuyển dụng)</option>
               </select>
             </div>
-            <div>
+            <div className="relative">
               <label htmlFor="password" className="sr-only">Mật khẩu</label>
-              <input id="password" name="password" type="password" required
-                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              <input id="password" name="password" type={showPassword ? 'text' : 'password'} required
+                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm pr-10"
                 placeholder="Mật khẩu"
                 value={password}
                 onChange={handlePasswordChange}
               />
+               <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+                aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+              >
+                <Icon name={showPassword ? 'eye-slash' : 'eye'} className="h-5 w-5" />
+              </button>
             </div>
              <div className="pt-2 px-1">
                 <ul className="space-y-1">
@@ -168,14 +178,22 @@ const Register: React.FC = () => {
                     <PasswordCriterion met={passwordCriteria.specialChar} text="Một ký tự đặc biệt (!@#$...)" />
                 </ul>
             </div>
-            <div>
+            <div className="relative">
               <label htmlFor="confirm-password" className="sr-only">Xác nhận mật khẩu</label>
-              <input id="confirm-password" name="confirm-password" type="password" required
-                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              <input id="confirm-password" name="confirm-password" type={showConfirmPassword ? 'text' : 'password'} required
+                className="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm pr-10"
                 placeholder="Xác nhận mật khẩu"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+                aria-label={showConfirmPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+              >
+                <Icon name={showConfirmPassword ? 'eye-slash' : 'eye'} className="h-5 w-5" />
+              </button>
             </div>
           </div>
 

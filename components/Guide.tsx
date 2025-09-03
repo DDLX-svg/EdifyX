@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Icon } from './shared/Icon.tsx';
 import type { Badge } from '../types.ts';
@@ -9,7 +10,8 @@ const BadgeInfoCard: React.FC<{ badge: Badge }> = ({ badge }) => {
         'bg-purple-600': '#9333EA', 'bg-blue-500': '#3B82F6', 'bg-teal-500': '#14B8A6',
         'bg-green-500': '#22C55E', 'bg-indigo-600': '#4F46E5', 'bg-sky-500': '#0EA5E9',
         'bg-orange-500': '#F97316', 'bg-rose-500': '#F43F5E', 'bg-violet-600': '#7C3AED',
-        'bg-slate-700': '#334155', 'bg-cyan-600': '#0891B2', 'bg-pink-500': '#EC4899', 'bg-fuchsia-600': '#C026D3'
+        'bg-slate-700': '#334155', 'bg-cyan-600': '#0891B2', 'bg-pink-500': '#EC4899', 
+        'bg-fuchsia-600': '#C026D3', 'bg-lime-600': '#65A30D', 'bg-red-700': '#B91C1C'
     };
     const borderColor = colorMap[badge.color] || badge.color;
 
@@ -28,28 +30,35 @@ const BadgeInfoCard: React.FC<{ badge: Badge }> = ({ badge }) => {
 
 const Guide: React.FC = () => {
     const practiceBadges: Badge[] = [
-        { name: 'Tân Binh', description: 'Bắt đầu hành trình chinh phục kiến thức.', icon: 'user', color: 'bg-green-500' },
-        { name: 'Học Viên Chăm Chỉ', description: 'Hoàn thành 50 câu hỏi đầu tiên.', icon: 'academic-cap', color: 'bg-teal-500' },
-        { name: 'Chiến Binh Tri Thức', description: 'Đã hoàn thành hơn 200 câu hỏi.', icon: 'practice', color: 'bg-blue-500' },
-        { name: 'Lão Làng SuniMed', description: 'Đã chinh phục hơn 500 câu hỏi trên hệ thống.', icon: 'trophy', color: 'bg-purple-600' },
-        { name: 'Huyền Thoại Sống', description: 'Đã chinh phục hơn 1000 câu hỏi trên hệ thống.', icon: 'trophy-solid', color: 'bg-violet-600' },
-        { name: 'Bậc Thầy Chính Xác', description: 'Đạt độ chính xác trên 95% với hơn 50 câu hỏi.', icon: 'star', color: 'bg-amber-500' },
-        { name: 'Siêu Chính Xác', description: 'Đạt độ chính xác trên 98% với hơn 200 câu hỏi.', icon: 'target', color: 'bg-rose-500' },
-        { name: 'Cộng tác viên', description: 'Dành cho những thành viên tích cực đóng góp tài liệu chất lượng cho cộng đồng.', icon: 'users', color: 'bg-pink-500' },
-        { name: 'Đại sứ SuniMed', description: 'Người đại diện cho giá trị và tinh thần của cộng đồng SuniMed.', icon: 'megaphone', color: 'bg-fuchsia-600' }
+        { name: 'Tân Binh', description: 'Bắt đầu hành trình chinh phục kiến thức.', icon: 'backpack', color: 'bg-green-500' },
+        { name: 'Học Viên Chăm Chỉ', description: 'Hoàn thành 50 câu hỏi đầu tiên.', icon: 'book', color: 'bg-teal-500' },
+        { name: 'Chiến Binh Tri Thức', description: 'Đã hoàn thành hơn 200 câu hỏi.', icon: 'swords', color: 'bg-blue-500' },
+        { name: 'Lão Làng SuniMed', description: 'Đã chinh phục hơn 500 câu hỏi trên hệ thống.', icon: 'building', color: 'bg-purple-600' },
+        { name: 'Huyền Thoại Sống', description: 'Đã chinh phục hơn 1000 câu hỏi trên hệ thống.', icon: 'crown', color: 'bg-violet-600' },
+        { name: 'Bậc Thầy Chính Xác', description: 'Đạt độ chính xác trên 95% với hơn 50 câu hỏi.', icon: 'target', color: 'bg-amber-500' },
+        { name: 'Siêu Chính Xác', description: 'Đạt độ chính xác trên 98% với hơn 200 câu hỏi.', icon: 'sparkles', color: 'bg-rose-500' },
     ];
     
     const researchBadges: Badge[] = [
-        { name: 'Nhà Nghiên cứu', description: 'Có bài báo khoa học đầu tiên được phê duyệt.', icon: 'document', color: 'bg-orange-500' },
-        { name: 'Học Giả', description: 'Đóng góp 5+ công trình nghiên cứu cho cộng đồng.', icon: 'book', color: 'bg-sky-500' },
-        { name: 'Tiến Sĩ', description: 'Đóng góp 10+ công trình nghiên cứu khoa học.', icon: 'beaker', color: 'bg-indigo-600' },
-        { name: 'Giáo Sư', description: 'Đóng góp 20+ công trình nghiên cứu khoa học.', icon: 'academic-cap-solid', color: 'bg-cyan-600' },
-        { name: 'Nhà Khoa Học Tiên Phong', description: 'Đóng góp 50+ công trình nghiên cứu khoa học.', icon: 'rocket', color: 'bg-slate-700' },
+        { name: 'Nhà Nghiên cứu', description: 'Có bài báo khoa học đầu tiên được phê duyệt (>=1).', icon: 'microscope', color: 'bg-orange-500' },
+        { name: 'Học Giả', description: 'Đóng góp 5+ công trình nghiên cứu cho cộng đồng.', icon: 'scroll', color: 'bg-blue-500' },
+        { name: 'Thạc sĩ', description: 'Đóng góp 10+ công trình nghiên cứu khoa học.', icon: 'academic-cap', color: 'bg-sky-500' },
+        { name: 'Tiến sĩ', description: 'Đóng góp 25+ công trình nghiên cứu khoa học.', icon: 'trophy', color: 'bg-cyan-600' },
+        { name: 'Nhà Khoa học Chuyên nghiệp', description: 'Đóng góp 50+ công trình nghiên cứu khoa học.', icon: 'beaker', color: 'bg-indigo-600' },
+        { name: 'Phó giáo sư', description: 'Đóng góp 75+ công trình nghiên cứu khoa học.', icon: 'trophy', color: 'bg-purple-600' },
+        { name: 'Giáo sư', description: 'Đóng góp 100+ công trình nghiên cứu khoa học.', icon: 'trophy-solid', color: 'bg-fuchsia-600' },
+        { name: 'Nhà bác học', description: 'Đóng góp 150+ công trình nghiên cứu.', icon: 'brain', color: 'bg-slate-700' },
+        { name: 'Siêu thiên tài', description: 'Đóng góp 250+ công trình nghiên cứu.', icon: 'galaxy', color: 'bg-red-700' },
     ];
 
     const specialBadges: Badge[] = [
-        { name: 'Quản trị viên', description: 'Quản lý và duy trì nội dung của SuniMed.', icon: 'admin', color: 'bg-red-600' },
-        { name: 'Developer', description: 'Người xây dựng và phát triển hệ thống SuniMed.', icon: 'settings', color: 'bg-gray-800' },
+        { name: 'Cộng tác viên', description: 'Thành viên tích cực đóng góp tài liệu chất lượng cho cộng đồng.', icon: 'handshake', color: 'bg-pink-500' },
+        { name: 'Đại sứ SuniMed', description: 'Người đại diện cho giá trị và tinh thần của cộng đồng SuniMed.', icon: 'globe', color: 'bg-fuchsia-600' },
+        { name: 'Bác sĩ chuyên ngành', description: 'Chuyên gia y khoa với kiến thức và kinh nghiệm sâu rộng.', icon: 'stethoscope', color: 'bg-cyan-600' },
+        { name: 'Dược sĩ chuyên ngành', description: 'Chuyên gia về dược phẩm, đảm bảo sử dụng thuốc an toàn.', icon: 'pill', color: 'bg-lime-600' },
+        { name: 'Nhà khoa học trẻ', description: 'Tài năng trẻ có đóng góp và tiềm năng nghiên cứu.', icon: 'beaker', color: 'bg-teal-500' },
+        { name: 'Quản trị viên', description: 'Quản lý và duy trì nội dung của SuniMed.', icon: 'shield', color: 'bg-red-600' },
+        { name: 'Developer', description: 'Người xây dựng và phát triển hệ thống SuniMed.', icon: 'laptop', color: 'bg-gray-800' },
     ];
     
     const resources = [
@@ -121,7 +130,7 @@ const Guide: React.FC = () => {
     return (
         <div className="max-w-4xl mx-auto space-y-12">
             <section className="text-center">
-                <Icon name="help" className="w-16 h-16 mx-auto text-blue-600 mb-4" />
+                <Icon name="compass" className="w-16 h-16 mx-auto text-blue-600 mb-4" />
                 <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">Chào mừng đến với SuniMed</h1>
                 <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
                     Đây là trang hướng dẫn toàn diện giúp bạn tận dụng tối đa các tính năng của nền tảng.
@@ -187,19 +196,19 @@ const Guide: React.FC = () => {
                 <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3"><Icon name="medal" className="w-8 h-8 text-amber-500" />3. Hệ thống Huy hiệu</h2>
                 <p className="text-gray-700 mb-6">Huy hiệu là sự ghi nhận cho những nỗ lực và đóng góp của bạn cho cộng đồng SuniMed. Hãy cố gắng sưu tầm tất cả nhé!</p>
                 <div>
-                    <h3 className="text-xl font-semibold text-gray-700 mb-4">Danh hiệu Luyện tập</h3>
+                    <h3 className="text-xl font-semibold text-gray-700 mb-4">Danh hiệu Luyện tập (dựa trên thành tích)</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {practiceBadges.map(badge => <BadgeInfoCard key={badge.name} badge={badge} />)}
                     </div>
                 </div>
                  <div className="mt-8">
-                    <h3 className="text-xl font-semibold text-gray-700 mb-4">Danh hiệu Nghiên cứu</h3>
+                    <h3 className="text-xl font-semibold text-gray-700 mb-4">Danh hiệu Nghiên cứu (dựa trên số bài báo được duyệt)</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {researchBadges.map(badge => <BadgeInfoCard key={badge.name} badge={badge} />)}
                     </div>
                 </div>
                 <div className="mt-8">
-                    <h3 className="text-xl font-semibold text-gray-700 mb-4">Danh hiệu Đặc biệt</h3>
+                    <h3 className="text-xl font-semibold text-gray-700 mb-4">Danh hiệu Đặc biệt (do Admin trao tặng)</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {specialBadges.map(badge => <BadgeInfoCard key={badge.name} badge={badge} />)}
                     </div>

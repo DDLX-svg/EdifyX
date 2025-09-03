@@ -57,10 +57,10 @@ const Header: React.FC = () => {
               <Icon name="practice" className="w-4 h-4 mr-2" /> Luyện tập
             </NavLink>
             <NavLink to="/guide" className={navLinkClass}>
-              <Icon name="help" className="w-4 h-4 mr-2" /> Hướng dẫn
+              <Icon name="compass" className="w-4 h-4 mr-2" /> Hướng dẫn
             </NavLink>
             <NavLink to="/leaderboard" className={navLinkClass}>
-              <Icon name="trophy" className="w-4 h-4 mr-2" /> Bảng xếp hạng
+              <Icon name="chart-bar" className="w-4 h-4 mr-2" /> Bảng xếp hạng
             </NavLink>
             {currentUser && (
                <NavLink to={`/profile/${currentUser.Email}`} className={navLinkClass}>
