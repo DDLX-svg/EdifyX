@@ -5,7 +5,7 @@ import path from 'path';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
-    base: '/SuniMed/',
+    base: '/', // Netlify build dễ dàng
     plugins: [react()],
     resolve: {
       alias: {
