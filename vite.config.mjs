@@ -4,16 +4,24 @@ import path from 'path';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
+
   return {
-    // Không cần base trên Netlify
     plugins: [react()],
     resolve: {
       alias: {
         '@': path.resolve('./src')
-      }
+      },
+      extensions: ['.mjs', '.js', '.ts', '.tsx', '.json', '.jsx']
     },
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
+    },
+    build: {
+      target: 'esnext',
+      outDir: 'dist'
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'react-router-dom']
     }
   };
 });
