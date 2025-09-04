@@ -3,28 +3,32 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
-  // Load environment variables
+  // Load environment variables từ file .env
   const env = loadEnv(mode, process.cwd(), '');
 
   return {
     plugins: [react()],
-    root: '.', // sử dụng root hiện tại
-    define: {
-      'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-    },
+    root: '.', // root hiện tại
+    base: '/', // quan trọng khi deploy Netlify ở root
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'), // alias cho root
+        '@': path.resolve(__dirname, '.'),
       },
     },
+    define: {
+      // Client-side chỉ truy cập được các biến env bắt đầu bằng VITE_
+      'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
+    },
     build: {
-      outDir: 'dist', // thư mục build
-      sourcemap: true, // có thể thêm để debug dễ hơn
+      outDir: 'dist',
+      sourcemap: true,
+      rollupOptions: {
+        input: path.resolve(__dirname, 'index.html'), // đảm bảo index.html được build chính xác
+      },
     },
     server: {
-      port: 3000, // tùy chọn: port dev server
-      open: true, // tự mở trình duyệt khi chạy dev
+      port: 3000,
+      open: true,
     },
   };
 });
