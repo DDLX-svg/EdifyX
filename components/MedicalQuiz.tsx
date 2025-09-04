@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { fetchPharmacyQuestions, fetchMedicineQuestions } from '../services/googleSheetService.ts';
@@ -17,7 +16,7 @@ const MedicalQuiz: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const config = location.state as { questions: number; time: number } | null;
-  const { currentUser, updateUserStats } = useAuth();
+  const { currentUser, updateUserStats, deductTokensForPractice } = useAuth();
 
   const [allQuestions, setAllQuestions] = useState<MedicalQuestion[]>([]);
   const [quizQuestions, setQuizQuestions] = useState<MedicalQuestion[]>([]);
@@ -30,6 +29,7 @@ const MedicalQuiz: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [showReview, setShowReview] = useState(false);
   const statsUpdated = useRef(false);
+  const tokensDeducted = useRef(false);
 
   useEffect(() => {
     const loadAllQuestions = async () => {
@@ -55,10 +55,16 @@ const MedicalQuiz: React.FC = () => {
     if (config && allQuestions.length > 0) {
       const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
       const selectedQuestions = shuffled.slice(0, Math.min(config.questions, allQuestions.length));
+      
+      if (selectedQuestions.length > 0 && !tokensDeducted.current) {
+          deductTokensForPractice();
+          tokensDeducted.current = true;
+      }
+
       setQuizQuestions(selectedQuestions);
       setTimeLeft(config.time * 60);
     }
-  }, [config, allQuestions]);
+  }, [config, allQuestions, deductTokensForPractice]);
 
   useEffect(() => {
     if (timeLeft === 0) {
@@ -136,17 +142,13 @@ const MedicalQuiz: React.FC = () => {
   
   const restartQuiz = () => {
     statsUpdated.current = false; // Reset stats update flag
+    tokensDeducted.current = false; // Reset token deduction flag
     setUserAnswers([]);
     setCurrentQuestionIndex(0);
     setQuizFinished(false);
     setSelectedOption(null);
     setShowReview(false);
-     if (config && allQuestions.length > 0) {
-      const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
-      const selectedQuestions = shuffled.slice(0, Math.min(config.questions, allQuestions.length));
-      setQuizQuestions(selectedQuestions);
-      setTimeLeft(config.time * 60);
-    }
+    navigate('/practice'); // Navigate back to select a new quiz which will trigger token check
   }
 
   const formatTime = (seconds: number) => {
@@ -228,7 +230,7 @@ const MedicalQuiz: React.FC = () => {
 
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <button onClick={restartQuiz} className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white font-bold py-3 px-6 rounded-full hover:bg-blue-700 transition duration-300">
-                <Icon name="refresh" className="w-5 h-5" /> Làm lại
+                <Icon name="refresh" className="w-5 h-5" /> Chọn lại
             </button>
             <button onClick={() => setShowReview(true)} disabled={userAnswers.length === 0} className="flex-1 flex items-center justify-center gap-2 bg-gray-700 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-800 transition duration-300 disabled:bg-gray-400">
                 <Icon name="eye" className="w-5 h-5" /> Xem lại bài làm

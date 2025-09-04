@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Icon } from './shared/Icon.tsx';
@@ -31,7 +30,7 @@ const Header: React.FC = () => {
               <div className="h-8 w-8 bg-gradient-to-tr from-blue-500 to-green-400 rounded-lg flex items-center justify-center">
                 <Icon name="logo" className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-800">SuniMed</span>
+              <span className="text-xl font-bold text-gray-800">EdifyX</span>
             </NavLink>
           </div>
           <nav className="hidden md:flex items-center space-x-4">
@@ -76,7 +75,11 @@ const Header: React.FC = () => {
           <div className="flex items-center gap-4">
             {currentUser ? (
               <>
-                <span className="text-sm font-medium text-gray-700">
+                <div title={`Bạn hiện có ${currentUser['Tokens'] ?? 0} tokens`} className="flex items-center gap-2 bg-yellow-100 text-yellow-800 font-semibold px-3 py-1.5 rounded-full text-sm">
+                    <Icon name="sparkles" className="w-4 h-4" />
+                    <span>{currentUser['Tokens'] ?? 0}</span>
+                </div>
+                <span className="hidden sm:inline text-sm font-medium text-gray-700">
                   Xin chào, {currentUser['Tên tài khoản']}
                 </span>
                 <button

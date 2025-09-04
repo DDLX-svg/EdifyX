@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { fetchAccounts, fetchArticles } from '../services/googleSheetService.ts';
@@ -24,6 +23,25 @@ const getRankDisplay = (rank: number) => {
     );
 };
 
+const TokenAlertModal: React.FC<{ onClose: () => void }> = ({ onClose }) => (
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
+        <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm text-center p-8">
+            <Icon name="alert" className="w-16 h-16 mx-auto text-yellow-500" />
+            <h2 className="text-2xl font-bold text-gray-800 mt-4">Không đủ token</h2>
+            <p className="text-gray-600 mt-2">
+                Bạn không có đủ 100 tokens để bắt đầu thử thách này.
+            </p>
+            <button
+                onClick={onClose}
+                className="mt-6 w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-full hover:bg-blue-700 transition"
+            >
+                Tôi đã hiểu
+            </button>
+        </div>
+    </div>
+);
+
+
 // --- Weekly Leaderboard Component ---
 interface WeeklyLeaderboardUser extends Account {
     rank: number;
@@ -34,7 +52,8 @@ const WeeklyLeaderboardTab: React.FC = () => {
     const [leaderboard, setLeaderboard] = useState<WeeklyLeaderboardUser[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
+    const [isTokenModalOpen, setIsTokenModalOpen] = useState(false);
     const { currentUser } = useAuth();
     const navigate = useNavigate();
 
@@ -83,9 +102,17 @@ const WeeklyLeaderboardTab: React.FC = () => {
         { questions: 25, time: 12 },
         { questions: 50, time: 25 },
     ];
+    
+    const handleAttemptChallenge = () => {
+        if (!currentUser || (currentUser['Tokens'] || 0) < 100) {
+            setIsTokenModalOpen(true);
+        } else {
+            setIsConfigModalOpen(true);
+        }
+    };
 
     const handleStartChallenge = (config: QuizOption) => {
-        setIsModalOpen(false);
+        setIsConfigModalOpen(false);
         navigate('/challenge-quiz', { state: config });
     };
 
@@ -130,11 +157,11 @@ const WeeklyLeaderboardTab: React.FC = () => {
                 <div>
                     <h2 className="text-3xl font-bold">Thử thách hàng tuần</h2>
                     <p className="mt-2 text-blue-100 max-w-2xl">
-                        Kiểm tra kiến thức của bạn với bộ câu hỏi tổng hợp và leo lên đỉnh bảng xếp hạng tuần này!
+                        Kiểm tra kiến thức của bạn với bộ câu hỏi tổng hợp và leo lên đỉnh bảng xếp hạng tuần này! Mỗi lượt tốn <span className="font-bold">100 tokens</span>.
                     </p>
                 </div>
                 <button
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handleAttemptChallenge}
                     className="bg-white text-blue-600 font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-100 transition duration-300 transform hover:scale-105 shadow-lg group inline-flex items-center"
                 >
                     Bắt đầu thử thách <Icon name="arrowRight" className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
@@ -170,12 +197,13 @@ const WeeklyLeaderboardTab: React.FC = () => {
             </div>
 
             <QuizConfigModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                isOpen={isConfigModalOpen}
+                onClose={() => setIsConfigModalOpen(false)}
                 onStart={handleStartChallenge}
                 title="Cấu hình Thử thách"
                 options={challengeOptions}
             />
+            {isTokenModalOpen && <TokenAlertModal onClose={() => setIsTokenModalOpen(false)} />}
         </div>
     );
 };

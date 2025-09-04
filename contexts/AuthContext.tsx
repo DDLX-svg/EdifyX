@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
-import { fetchAccounts, registerUser, resendVerificationEmail as resendVerificationEmailService, fetchArticles, updateUserQuizStats } from '../services/googleSheetService.ts';
+import { fetchAccounts, registerUser, resendVerificationEmail as resendVerificationEmailService, fetchArticles, updateUserQuizStats, deductPracticeTokens } from '../services/googleSheetService.ts';
 import type { Account } from '../types.ts';
+import { useToast } from './ToastContext.tsx';
 
 interface LoginResult {
   success: boolean;
@@ -23,6 +24,7 @@ interface AuthContextType {
   ) => Promise<{ success: boolean; error?: string }>;
   resendVerificationEmail: (email: string) => Promise<{ success: boolean; error?: string }>;
   updateUserStats: (attempted: number, correct: number) => void;
+  deductTokensForPractice: () => void;
   newArticleCount: number;
   markArticlesAsSeen: () => void;
 }
@@ -33,8 +35,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [currentUser, setCurrentUser] = useState<Account | null>(null);
   const [loading, setLoading] = useState(true);
   const [newArticleCount, setNewArticleCount] = useState(0);
+  const { showToast } = useToast();
 
-  const SEEN_ARTICLES_KEY = 'sunimed_seen_articles_v1';
+  const SEEN_ARTICLES_KEY = 'edifyx_seen_articles_v1';
 
   useEffect(() => {
     // This effect runs when the component mounts and when the user logs in/out.
@@ -197,9 +200,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             .then(response => {
                 if (!response.success) {
                     console.error("Failed to sync quiz stats to backend:", response.error);
-                    // Here you could implement a retry mechanism or notify the user
-                } else {
-                    console.log("Quiz stats successfully synced to backend.");
                 }
             })
             .catch(err => {
@@ -210,6 +210,60 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   }, []);
 
+  const deductTokensForPractice = useCallback(() => {
+    const userEmail = currentUser?.Email;
+    if (!userEmail) {
+        showToast('Lỗi: Không tìm thấy người dùng để trừ token.', 'error');
+        return;
+    }
+
+    // 1. Optimistic UI update
+    setCurrentUser(prevUser => {
+      if (!prevUser) return null;
+      const optimisticallyUpdatedUser: Account = {
+        ...prevUser,
+        'Tokens': Math.max(0, (prevUser['Tokens'] || 0) - 100),
+      };
+      sessionStorage.setItem('currentUser', JSON.stringify(optimisticallyUpdatedUser));
+      return optimisticallyUpdatedUser;
+    });
+
+    // 2. Async backend call
+    deductPracticeTokens(userEmail)
+      .then(response => {
+        if (response.success) {
+          if (typeof response.newTokens === 'number') {
+            setCurrentUser(currentUserNow => {
+              if (!currentUserNow) return null;
+              const confirmedUser = { ...currentUserNow, Tokens: response.newTokens! };
+              sessionStorage.setItem('currentUser', JSON.stringify(confirmedUser));
+              return confirmedUser;
+            });
+          }
+           showToast('Đã sử dụng 100 token cho phiên luyện tập.', 'success');
+        } else {
+          console.error("Failed to sync token deduction to backend:", response.error);
+          setCurrentUser(currentUserNow => {
+            if (!currentUserNow) return null;
+            const revertedUser = { ...currentUserNow, 'Tokens': (currentUserNow['Tokens'] || 0) + 100 };
+            sessionStorage.setItem('currentUser', JSON.stringify(revertedUser));
+            return revertedUser;
+          });
+          showToast(`Hoàn lại token. Lỗi: ${response.error || 'Không thể đồng bộ với máy chủ.'}`, 'error');
+        }
+      })
+      .catch(err => {
+        console.error("Network error during token deduction:", err);
+        setCurrentUser(currentUserNow => {
+          if (!currentUserNow) return null;
+          const revertedUser = { ...currentUserNow, 'Tokens': (currentUserNow['Tokens'] || 0) + 100 };
+          sessionStorage.setItem('currentUser', JSON.stringify(revertedUser));
+          return revertedUser;
+        });
+        showToast(`Hoàn lại token. Lỗi: ${err.message || 'Lỗi mạng.'}`, 'error');
+      });
+  }, [currentUser, showToast]);
+
   const value = {
     currentUser,
     loading,
@@ -218,6 +272,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     register,
     resendVerificationEmail,
     updateUserStats,
+    deductTokensForPractice,
     newArticleCount,
     markArticlesAsSeen,
   };

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { fetchAllQuestions } from '../services/googleSheetService.ts';
@@ -22,7 +21,7 @@ const QuestionDisplay: React.FC<{ question: AnyQuestion }> = ({ question }) => {
 const ChallengeQuiz: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { currentUser, updateUserStats } = useAuth();
+    const { currentUser, updateUserStats, deductTokensForPractice } = useAuth();
     const config = location.state as { questions: number; time: number } | null;
 
     const [allQuestions, setAllQuestions] = useState<AnyQuestion[]>([]);
@@ -35,6 +34,7 @@ const ChallengeQuiz: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [timeLeft, setTimeLeft] = useState<number | null>(null);
     const statsUpdated = useRef(false);
+    const tokensDeducted = useRef(false);
 
     useEffect(() => {
         const loadQuestions = async () => {
@@ -56,10 +56,16 @@ const ChallengeQuiz: React.FC = () => {
         if (config && allQuestions.length > 0) {
             const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
             const selected = shuffled.slice(0, Math.min(config.questions, allQuestions.length));
+            
+            if (selected.length > 0 && !tokensDeducted.current) {
+                deductTokensForPractice();
+                tokensDeducted.current = true;
+            }
+            
             setQuizQuestions(selected);
             setTimeLeft(config.time * 60);
         }
-    }, [config, allQuestions]);
+    }, [config, allQuestions, deductTokensForPractice]);
 
     useEffect(() => {
         if (timeLeft === 0) {

@@ -91,7 +91,7 @@ const Login: React.FC = () => {
              <Icon name="logo" className="h-6 w-6 text-white" />
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Đăng nhập vào SuniMed
+            Đăng nhập vào EdifyX
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Hoặc{' '}

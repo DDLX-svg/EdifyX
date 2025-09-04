@@ -81,15 +81,38 @@ const PracticeCard = ({ mode, onStart }: {
   );
 };
 
+const TokenAlertModal: React.FC<{ onClose: () => void }> = ({ onClose }) => (
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
+        <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm text-center p-8">
+            <Icon name="alert" className="w-16 h-16 mx-auto text-yellow-500" />
+            <h2 className="text-2xl font-bold text-gray-800 mt-4">Không đủ token</h2>
+            <p className="text-gray-600 mt-2">
+                Bạn không có đủ 100 tokens để bắt đầu phiên luyện tập này.
+            </p>
+            <button
+                onClick={onClose}
+                className="mt-6 w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-full hover:bg-blue-700 transition"
+            >
+                Tôi đã hiểu
+            </button>
+        </div>
+    </div>
+);
+
 const Practice: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<QuizType | null>(null);
+  const [showTokenModal, setShowTokenModal] = useState(false);
   const navigate = useNavigate();
   const { currentUser } = useAuth();
 
   const openModal = (quizType: QuizType) => {
-    setSelectedQuiz(quizType);
-    setModalOpen(true);
+    if (!currentUser || (currentUser['Tokens'] || 0) < 100) {
+        setShowTokenModal(true);
+    } else {
+        setSelectedQuiz(quizType);
+        setModalOpen(true);
+    }
   };
 
   const handleStartQuiz = (config: QuizOption) => {
@@ -113,16 +136,40 @@ const Practice: React.FC = () => {
       <section className="text-center">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">Trung tâm Luyện tập</h1>
         <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-            Chọn một hình thức để bắt đầu kiểm tra và củng cố kiến thức của bạn.
+            Mỗi phiên luyện tập tốn <span className="font-bold text-blue-600">100 tokens</span>. Chọn một hình thức để bắt đầu.
         </p>
       </section>
 
       {currentUser && <PracticeAnalytics user={currentUser} />}
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
         <PracticeCard mode={practiceModes.anatomy} onStart={() => openModal('anatomy')} />
         <PracticeCard mode={practiceModes.pharmacy} onStart={() => openModal('pharmacy')} />
         <PracticeCard mode={practiceModes.medicine} onStart={() => openModal('medicine')} />
+        <a href="https://sites.google.com/view/edufitvn" target="_blank" rel="noopener noreferrer" className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col transform transition duration-300 hover:-translate-y-1.5 hover:shadow-xl">
+            <div className="p-8 text-white bg-gradient-to-br from-amber-400 to-orange-500">
+                <Icon name="academic-cap-solid" className="w-16 h-16 mb-4 opacity-90" />
+                <h3 className="text-3xl font-bold">Ôn thi THPT QG</h3>
+                <p className="mt-2 text-white/90">Tài liệu và đề thi thử cho kỳ thi Tốt nghiệp THPT Quốc gia.</p>
+            </div>
+            <div className="p-8 border-b border-gray-200 flex-grow">
+                <div className="grid grid-cols-2 gap-4 text-center">
+                    <div>
+                        <p className="text-2xl font-bold text-gray-800">Đa dạng</p>
+                        <p className="text-sm text-gray-500">Môn học</p>
+                    </div>
+                    <div>
+                        <p className="text-2xl font-bold text-gray-800">Cập nhật</p>
+                        <p className="text-sm text-gray-500">Đề thi</p>
+                    </div>
+                </div>
+            </div>
+            <div className="p-6 bg-gray-50">
+                <div className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-lg text-center transition duration-300 flex items-center justify-center shadow-md hover:shadow-lg">
+                    Chuyển đến trang <Icon name="arrowRight" className="inline-block w-5 h-5 ml-2" />
+                </div>
+            </div>
+        </a>
       </div>
       
       {modalOpen && currentQuizData && (
@@ -134,6 +181,8 @@ const Practice: React.FC = () => {
             options={currentQuizData.options}
         />
       )}
+
+      {showTokenModal && <TokenAlertModal onClose={() => setShowTokenModal(false)} />}
     </div>
   );
 };

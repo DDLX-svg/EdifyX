@@ -4,9 +4,8 @@ import { useLocation, Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.tsx';
 
 const VerifyEmail: React.FC = () => {
-  // FIX: `useLocation` hook does not accept generic type arguments. The location state must be cast manually for type safety.
   const location = useLocation();
-  const email = (location.state as {email: string})?.email;
+  const email = location.state?.email;
   const { resendVerificationEmail } = useAuth();
 
   const [cooldown, setCooldown] = useState(0);

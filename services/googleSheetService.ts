@@ -5,7 +5,7 @@ const SHEET_ID = '1GMdIGBbcTgj2cLA5Ux-_X3KLGhAwYcgc08r2TjzKFVs';
 const BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=`;
 
 // This is the correct, user-provided Google Apps Script URL.
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzcry1cSDN55wRhVCBT3jLyzg2c66tEYBgi1YZVzx70VIMF8b7VzXcXbfBW5mywHJWRoA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzp7GXGLq5h0bMnTEWI9SQIKZW3u-Ox5DxdpLiZc05JOed6zufG8DF9L7s0XDtYCqqOBA/exec';
 const fetchData = async <T,>(sheetName: string): Promise<T[]> => {
   const url = `${BASE_URL}${encodeURIComponent(sheetName)}&t=${new Date().getTime()}`;
   const response = await fetch(url);
@@ -23,43 +23,51 @@ const fetchData = async <T,>(sheetName: string): Promise<T[]> => {
 };
 
 const postToAppsScript = async (payload: object): Promise<any> => {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000); // 20-second timeout
-
     try {
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST',
             mode: 'cors',
-            body: JSON.stringify(payload),
             headers: {
-                'Content-Type': 'text/plain;charset=utf-8',
+                'Content-Type': 'application/x-www-form-urlencoded',
             },
-            signal: controller.signal,
+            body: new URLSearchParams(payload as Record<string, any>).toString(),
+            redirect: 'follow',
         });
 
-        clearTimeout(timeoutId);
+        const responseText = await response.text();
 
         if (!response.ok) {
-            throw new Error(`Server responded with status: ${response.status}`);
+            // Even if the response is not "ok", it might contain a JSON error message from the script.
+            try {
+                const errorJson = JSON.parse(responseText);
+                throw new Error(errorJson.message || `Lỗi máy chủ: ${response.status}`);
+            } catch (e) {
+                throw new Error(`Lỗi máy chủ: ${response.status}. Phản hồi không hợp lệ: ${responseText}`);
+            }
         }
         
-        const text = await response.text();
+        // Response is OK (status 200-299)
         try {
-            return JSON.parse(text);
+            // Ideal case: A valid JSON response.
+            return JSON.parse(responseText);
         } catch (e) {
-            console.error("Failed to parse server response as JSON:", text);
-            throw new Error("Received an invalid response from the server.");
+            // This is the expected behavior for Google Apps Script POST requests that don't return JSON.
+            // The request was successful, but the response is often HTML from a redirect.
+            // We treat this as a success for the operation.
+            console.warn("Request was successful but the response was not valid JSON. This is typical for Google Apps Script. Assuming success.");
+            return { status: 'success', data: responseText };
         }
 
     } catch (error: any) {
-        clearTimeout(timeoutId);
-        if (error.name === 'AbortError') {
-            throw new Error('Yêu cầu đã hết thời gian chờ. Vui lòng kiểm tra kết nối mạng của bạn.');
+        console.error('Lỗi khi gửi yêu cầu đến Apps Script:', error);
+        if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+            throw new Error('Lỗi mạng: Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối internet của bạn.');
         }
-        console.error('postToAppsScript Error:', error);
-        throw new Error('Không thể kết nối đến máy chủ. Vui lòng thử lại sau.');
+        // Re-throw the original error to be handled by the calling function.
+        throw error;
     }
 };
+
 
 export const fetchAnatomyQuestions = async (): Promise<AnatomyQuestion[]> => {
   return fetchData<AnatomyQuestion>('Questions_Anatomy');
@@ -101,6 +109,7 @@ export const fetchAccounts = async (): Promise<Account[]> => {
     'Tổng số câu hỏi đã làm đúng': parseInt(acc['Tổng số câu hỏi đã làm đúng'] || '0', 10) || 0,
     'Tổng số câu hỏi đã làm trong tuần': parseInt(acc['Tổng số câu hỏi đã làm trong tuần'] || '0', 10) || 0,
     'Tổng số câu hỏi đã làm đúng trong tuần': parseInt(acc['Tổng số câu hỏi đã làm đúng trong tuần'] || '0', 10) || 0,
+    'Tokens': parseInt(acc['Tokens'] || '0', 10) || 0,
   }));
 };
 
@@ -267,6 +276,21 @@ export const updateUserQuizStats = async (
             return { success: true };
         }
         return { success: false, error: result.message || 'Lỗi không xác định khi cập nhật điểm.' };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+};
+
+export const deductPracticeTokens = async (email: string): Promise<{ success: boolean; error?: string; newTokens?: number }> => {
+    try {
+        const result = await postToAppsScript({
+            action: 'deductPracticeTokens',
+            email: email,
+        });
+        if (result.status === 'success') {
+            return { success: true, newTokens: result.newTokens };
+        }
+        return { success: false, error: result.message || 'Lỗi không xác định khi trừ token.' };
     } catch (error: any) {
         return { success: false, error: error.message };
     }

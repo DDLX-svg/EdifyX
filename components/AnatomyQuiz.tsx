@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { fetchAnatomyQuestions } from '../services/googleSheetService.ts';
@@ -82,8 +81,9 @@ const AnatomyQuiz: React.FC = () => {
   const [showReview, setShowReview] = useState(false);
   const [actualQuestionCount, setActualQuestionCount] = useState(0);
   const imageRef = useRef<HTMLImageElement>(null);
-  const { currentUser, updateUserStats } = useAuth();
+  const { currentUser, updateUserStats, deductTokensForPractice } = useAuth();
   const statsUpdated = useRef(false);
+  const tokensDeducted = useRef(false);
 
   useEffect(() => {
     const loadAndSetupQuiz = async () => {
@@ -96,6 +96,11 @@ const AnatomyQuiz: React.FC = () => {
         const shuffled = [...data].sort(() => 0.5 - Math.random());
         const selectedQuestions = shuffled.slice(0, Math.min(config.questions, data.length));
         
+        if (selectedQuestions.length > 0 && !tokensDeducted.current) {
+            deductTokensForPractice();
+            tokensDeducted.current = true;
+        }
+
         setQuizQuestions(selectedQuestions);
         setActualQuestionCount(selectedQuestions.length);
         setTimeLeft(config.time * 60);
@@ -108,7 +113,7 @@ const AnatomyQuiz: React.FC = () => {
       }
     };
     loadAndSetupQuiz();
-  }, [config]);
+  }, [config, deductTokensForPractice]);
   
   useEffect(() => {
     if (timeLeft === 0) {

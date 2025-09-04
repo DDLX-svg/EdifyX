@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from './shared/Icon.tsx';
+import Reviews from './Reviews.tsx';
 import type { Badge } from '../types.ts';
 
 const Home: React.FC = () => {
@@ -30,11 +30,19 @@ const Home: React.FC = () => {
     },
      {
       title: 'Nghiên cứu khoa học',
-      description: 'Khám phá, chia sẻ và thảo luận về các công trình nghiên cứu khoa học trong cộng đồng SuniMed.',
+      description: 'Khám phá, chia sẻ và thảo luận về các công trình nghiên cứu khoa học trong cộng đồng EdifyX.',
       features: ['Đăng tải công trình', 'Bình duyệt bởi cộng đồng', 'Truy cập mở'],
       path: '/articles',
       color: 'purple',
       icon: 'academic-cap',
+    },
+    {
+      title: 'Ôn thi THPT',
+      description: 'Tài liệu, đề thi thử và các bài giảng chất lượng cao giúp học sinh chinh phục kỳ thi Tốt nghiệp THPT Quốc gia.',
+      features: ['Đề thi thử mới nhất', 'Bài giảng theo chuyên đề', 'Mẹo làm bài thi'],
+      path: '/practice',
+      color: 'orange',
+      icon: 'rocket',
     },
   ];
 
@@ -42,7 +50,15 @@ const Home: React.FC = () => {
     blue: { bg: 'bg-gradient-to-br from-blue-500 to-cyan-500', button: 'bg-gradient-to-r from-blue-500 to-blue-600' },
     green: { bg: 'bg-gradient-to-br from-green-500 to-emerald-500', button: 'bg-gradient-to-r from-green-500 to-teal-500' },
     purple: { bg: 'bg-gradient-to-br from-purple-500 to-indigo-500', button: 'bg-gradient-to-r from-purple-500 to-indigo-500' },
+    orange: { bg: 'bg-gradient-to-br from-orange-500 to-amber-500', button: 'bg-gradient-to-r from-orange-500 to-amber-500' },
   };
+
+  const teamMembers = [
+    { name: 'Đinh Bảo Đức', role: 'Founder / Developer' },
+    { name: 'Nguyễn Minh Anh', role: 'Co-Founder' },
+    { name: 'Lê Thu Trang', role: 'Kiểm duyệt viên' },
+    { name: 'Trần Văn Hoàng', role: 'Cộng tác viên' },
+  ];
 
   return (
     <div className="space-y-20">
@@ -55,10 +71,10 @@ const Home: React.FC = () => {
         ></div>
         <div className="relative z-10">
             <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight shadow-text">
-            Chinh phục Y khoa cùng SuniMed
+            Chinh phục Tri thức cùng EdifyX
             </h1>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-10">
-            Nền tảng học tập y khoa hàng đầu với hệ thống luyện thi và chia sẻ tài liệu chuyên nghiệp
+            Nền tảng học tập hàng đầu với hệ thống luyện thi và chia sẻ tài liệu chuyên nghiệp
             </p>
             <Link
             to="/practice"
@@ -86,9 +102,9 @@ const Home: React.FC = () => {
       <section className="pt-12">
         <h2 className="text-4xl font-bold text-center mb-4">Khám phá các module học tập</h2>
         <p className="text-lg text-gray-600 text-center max-w-2xl mx-auto mb-12">
-          Hệ thống học tập toàn diện được thiết kế đặc biệt cho sinh viên và bác sĩ
+          Hệ thống học tập toàn diện được thiết kế đặc biệt cho mọi cấp độ học viên
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {modules.map((mod) => (
             <div key={mod.title} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
               <div className={`p-8 text-white ${colorClasses[mod.color as keyof typeof colorClasses].bg}`}>
@@ -122,7 +138,7 @@ const Home: React.FC = () => {
         <Icon name="help" className="w-16 h-16 mx-auto text-blue-600 mb-4" />
         <h2 className="text-4xl font-bold mb-3">Hướng dẫn sử dụng</h2>
         <p className="text-lg text-gray-600 mb-8 max-w-xl mx-auto">
-            Tìm hiểu cách tận dụng tối đa các tính năng học tập và nghiên cứu của SuniMed.
+            Tìm hiểu cách tận dụng tối đa các tính năng học tập và nghiên cứu của EdifyX.
         </p>
         <Link 
             to="/guide"
@@ -133,22 +149,40 @@ const Home: React.FC = () => {
         </Link>
       </section>
 
-      {/* Feedback Section */}
-      <section className="rounded-3xl p-12 bg-gray-800 text-white text-center">
-        <Icon name="feedback" className="w-16 h-16 mx-auto text-blue-400 mb-4" />
-        <h2 className="text-4xl font-bold mb-3">Góp ý & Báo lỗi</h2>
-        <p className="text-lg text-gray-300 mb-8 max-w-xl mx-auto">
-          Sự đóng góp của bạn giúp chúng tôi hoàn thiện SuniMed hơn mỗi ngày.
-        </p>
-        <a 
-          href="https://forms.gle/your-feedback-form-link"
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 shadow-lg inline-block group"
-        >
-          Gửi góp ý
-        </a>
+      {/* Reviews Section */}
+      <section className="pt-20 pb-12">
+        <div className="container mx-auto text-center">
+            <Icon name="megaphone" className="w-16 h-16 mx-auto text-blue-600 mb-4" />
+            <h2 className="text-4xl font-bold mb-3 text-gray-800">Cộng đồng nói gì về EdifyX</h2>
+            <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+                Những chia sẻ và đánh giá chân thực từ các học viên, bác sĩ và nhà nghiên cứu đã tin tưởng sử dụng nền tảng của chúng tôi.
+            </p>
+            <Reviews />
+        </div>
       </section>
+
+      {/* About Us Section */}
+      <section className="pt-20 pb-12">
+        <div className="container mx-auto text-center">
+          <Icon name="users" className="w-16 h-16 mx-auto text-blue-600 mb-4" />
+          <h2 className="text-4xl font-bold mb-3 text-gray-800">Gặp gỡ đội ngũ của chúng tôi</h2>
+          <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+            Những con người tâm huyết đứng sau EdifyX, luôn nỗ lực mang đến nền tảng học tập và nghiên cứu tốt nhất.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {teamMembers.map((member) => (
+              <div key={member.name} className="bg-white p-6 rounded-2xl shadow-lg text-center transform transition duration-300 hover:-translate-y-2 hover:shadow-2xl">
+                <div className="w-32 h-32 rounded-full mx-auto mb-4 bg-gray-200 flex items-center justify-center">
+                  <Icon name="user" className="w-16 h-16 text-gray-400" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800">{member.name}</h3>
+                <p className="text-blue-600 font-semibold">{member.role}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
        <style>{`
         .shadow-text {
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);

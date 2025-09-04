@@ -1,4 +1,3 @@
-
 export interface AnatomyQuestion {
   ID: string;
   Image_URL: string;
@@ -38,6 +37,8 @@ export interface Account {
   'Tổng số câu hỏi đã làm đúng': number;
   'Tổng số câu hỏi đã làm trong tuần': number;
   'Tổng số câu hỏi đã làm đúng trong tuần': number;
+  'Đặc biệt'?: string;
+  'Tokens': number;
 }
 
 

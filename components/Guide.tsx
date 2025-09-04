@@ -1,16 +1,17 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Icon } from './shared/Icon.tsx';
 import type { Badge } from '../types.ts';
+import { BADGE_DEFINITIONS } from '../utils/badgeUtils.ts';
 
 const BadgeInfoCard: React.FC<{ badge: Badge }> = ({ badge }) => {
     // Convert Tailwind color to a hex value for the border
+    // FIX: Removed duplicate keys 'bg-fuchsia-600' and 'bg-slate-700' which were causing an error.
     const colorMap: {[key: string]: string} = {
         'bg-gray-800': '#1F2937', 'bg-red-600': '#DC2626', 'bg-amber-500': '#F59E0B',
         'bg-purple-600': '#9333EA', 'bg-blue-500': '#3B82F6', 'bg-teal-500': '#14B8A6',
         'bg-green-500': '#22C55E', 'bg-indigo-600': '#4F46E5', 'bg-sky-500': '#0EA5E9',
         'bg-orange-500': '#F97316', 'bg-rose-500': '#F43F5E', 'bg-violet-600': '#7C3AED',
-        'bg-slate-700': '#334155', 'bg-cyan-600': '#0891B2', 'bg-pink-500': '#EC4899', 
+        'bg-slate-700': '#334155', 'bg-cyan-600': '#0891B2', 'bg-pink-500': '#EC4899',
         'bg-fuchsia-600': '#C026D3', 'bg-lime-600': '#65A30D', 'bg-red-700': '#B91C1C'
     };
     const borderColor = colorMap[badge.color] || badge.color;
@@ -29,36 +30,20 @@ const BadgeInfoCard: React.FC<{ badge: Badge }> = ({ badge }) => {
 };
 
 const Guide: React.FC = () => {
-    const practiceBadges: Badge[] = [
-        { name: 'Tân Binh', description: 'Bắt đầu hành trình chinh phục kiến thức.', icon: 'backpack', color: 'bg-green-500' },
-        { name: 'Học Viên Chăm Chỉ', description: 'Hoàn thành 50 câu hỏi đầu tiên.', icon: 'book', color: 'bg-teal-500' },
-        { name: 'Chiến Binh Tri Thức', description: 'Đã hoàn thành hơn 200 câu hỏi.', icon: 'swords', color: 'bg-blue-500' },
-        { name: 'Lão Làng SuniMed', description: 'Đã chinh phục hơn 500 câu hỏi trên hệ thống.', icon: 'building', color: 'bg-purple-600' },
-        { name: 'Huyền Thoại Sống', description: 'Đã chinh phục hơn 1000 câu hỏi trên hệ thống.', icon: 'crown', color: 'bg-violet-600' },
-        { name: 'Bậc Thầy Chính Xác', description: 'Đạt độ chính xác trên 95% với hơn 50 câu hỏi.', icon: 'target', color: 'bg-amber-500' },
-        { name: 'Siêu Chính Xác', description: 'Đạt độ chính xác trên 98% với hơn 200 câu hỏi.', icon: 'sparkles', color: 'bg-rose-500' },
-    ];
-    
-    const researchBadges: Badge[] = [
-        { name: 'Nhà Nghiên cứu', description: 'Có bài báo khoa học đầu tiên được phê duyệt (>=1).', icon: 'microscope', color: 'bg-orange-500' },
-        { name: 'Học Giả', description: 'Đóng góp 5+ công trình nghiên cứu cho cộng đồng.', icon: 'scroll', color: 'bg-blue-500' },
-        { name: 'Thạc sĩ', description: 'Đóng góp 10+ công trình nghiên cứu khoa học.', icon: 'academic-cap', color: 'bg-sky-500' },
-        { name: 'Tiến sĩ', description: 'Đóng góp 25+ công trình nghiên cứu khoa học.', icon: 'trophy', color: 'bg-cyan-600' },
-        { name: 'Nhà Khoa học Chuyên nghiệp', description: 'Đóng góp 50+ công trình nghiên cứu khoa học.', icon: 'beaker', color: 'bg-indigo-600' },
-        { name: 'Phó giáo sư', description: 'Đóng góp 75+ công trình nghiên cứu khoa học.', icon: 'trophy', color: 'bg-purple-600' },
-        { name: 'Giáo sư', description: 'Đóng góp 100+ công trình nghiên cứu khoa học.', icon: 'trophy-solid', color: 'bg-fuchsia-600' },
-        { name: 'Nhà bác học', description: 'Đóng góp 150+ công trình nghiên cứu.', icon: 'brain', color: 'bg-slate-700' },
-        { name: 'Siêu thiên tài', description: 'Đóng góp 250+ công trình nghiên cứu.', icon: 'galaxy', color: 'bg-red-700' },
-    ];
+    const [activeBadgeTab, setActiveBadgeTab] = useState<'practice' | 'research' | 'special'>('practice');
 
-    const specialBadges: Badge[] = [
-        { name: 'Cộng tác viên', description: 'Thành viên tích cực đóng góp tài liệu chất lượng cho cộng đồng.', icon: 'handshake', color: 'bg-pink-500' },
-        { name: 'Đại sứ SuniMed', description: 'Người đại diện cho giá trị và tinh thần của cộng đồng SuniMed.', icon: 'globe', color: 'bg-fuchsia-600' },
-        { name: 'Bác sĩ chuyên ngành', description: 'Chuyên gia y khoa với kiến thức và kinh nghiệm sâu rộng.', icon: 'stethoscope', color: 'bg-cyan-600' },
-        { name: 'Dược sĩ chuyên ngành', description: 'Chuyên gia về dược phẩm, đảm bảo sử dụng thuốc an toàn.', icon: 'pill', color: 'bg-lime-600' },
-        { name: 'Nhà khoa học trẻ', description: 'Tài năng trẻ có đóng góp và tiềm năng nghiên cứu.', icon: 'beaker', color: 'bg-teal-500' },
-        { name: 'Quản trị viên', description: 'Quản lý và duy trì nội dung của SuniMed.', icon: 'shield', color: 'bg-red-600' },
-        { name: 'Developer', description: 'Người xây dựng và phát triển hệ thống SuniMed.', icon: 'laptop', color: 'bg-gray-800' },
+    const practiceBadgeNames = ['Tân Binh', 'Học Viên Chăm Chỉ', 'Chiến Binh Tri Thức', 'Lão Làng EdifyX', 'Huyền Thoại Sống', 'Bậc Thầy Chính Xác', 'Siêu Chính Xác'];
+    const researchBadgeNames = ['Nhà Nghiên cứu', 'Học Giả', 'Thạc sĩ', 'Tiến sĩ', 'Nhà Khoa học Chuyên nghiệp', 'Phó giáo sư', 'Giáo sư', 'Nhà bác học', 'Siêu thiên tài'];
+    const specialBadgeNames = ['Cộng tác viên', 'Đại sứ EdifyX', 'Bác sĩ chuyên ngành', 'Dược sĩ chuyên ngành', 'Nhà khoa học trẻ', 'Admin', 'Developer'];
+
+    const getBadgesByNames = (names: string[]): Badge[] => {
+        return names.map(name => ({ name, ...BADGE_DEFINITIONS[name] })).filter(b => b.icon);
+    };
+
+    const badgeTabs = [
+        { id: 'practice', name: 'Luyện tập', badges: getBadgesByNames(practiceBadgeNames) },
+        { id: 'research', name: 'Nghiên cứu', badges: getBadgesByNames(researchBadgeNames) },
+        { id: 'special', name: 'Đặc biệt', badges: getBadgesByNames(specialBadgeNames) },
     ];
     
     const resources = [
@@ -127,11 +112,22 @@ const Guide: React.FC = () => {
       },
     ];
 
+    const activeBadges = badgeTabs.find(tab => tab.id === activeBadgeTab)?.badges || [];
+
     return (
         <div className="max-w-4xl mx-auto space-y-12">
+            <style>{`
+                .fade-in {
+                    animation: fadeIn 0.5s ease-in-out;
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+            `}</style>
             <section className="text-center">
                 <Icon name="compass" className="w-16 h-16 mx-auto text-blue-600 mb-4" />
-                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">Chào mừng đến với SuniMed</h1>
+                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">Chào mừng đến với EdifyX</h1>
                 <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
                     Đây là trang hướng dẫn toàn diện giúp bạn tận dụng tối đa các tính năng của nền tảng.
                 </p>
@@ -140,11 +136,11 @@ const Guide: React.FC = () => {
             <section id="usage-guide" className="bg-white p-8 rounded-2xl shadow-lg">
                 <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3"><Icon name="logo" className="w-8 h-8 text-blue-600" />1. Hướng dẫn sử dụng</h2>
                 <div className="space-y-4 text-gray-700">
-                    <p>SuniMed được thiết kế để trở thành người bạn đồng hành trong học tập và nghiên cứu y khoa. Dưới đây là các tính năng chính:</p>
+                    <p>EdifyX được thiết kế để trở thành người bạn đồng hành trong học tập và nghiên cứu. Dưới đây là các tính năng chính:</p>
                     <ul className="list-disc list-inside space-y-3 pl-4">
-                        <li><strong className="font-semibold">Tài liệu:</strong> Truy cập kho tài liệu y khoa phong phú, từ sách, bài giảng đến video. Sử dụng bộ lọc để tìm kiếm nhanh chóng và chính xác.</li>
-                        <li><strong className="font-semibold">Nghiên cứu:</strong> Khám phá các công trình nghiên cứu từ cộng đồng, chia sẻ kiến thức và đăng tải bài báo của riêng bạn để đóng góp cho nền y học.</li>
-                        <li><strong className="font-semibold">Luyện tập:</strong> Củng cố kiến thức qua ba chế độ: Thi chạy trạm Giải phẫu, trắc nghiệm Dược học và Y đa khoa.</li>
+                        <li><strong className="font-semibold">Tài liệu:</strong> Truy cập kho tài liệu phong phú, từ sách, bài giảng đến video. Sử dụng bộ lọc để tìm kiếm nhanh chóng và chính xác.</li>
+                        <li><strong className="font-semibold">Nghiên cứu:</strong> Khám phá các công trình nghiên cứu từ cộng đồng, chia sẻ kiến thức và đăng tải bài báo của riêng bạn để đóng góp cho nền tri thức chung.</li>
+                        <li><strong className="font-semibold">Luyện tập:</strong> Củng cố kiến thức qua các chế độ: Thi chạy trạm Giải phẫu, trắc nghiệm Dược học, Y đa khoa, và ôn thi THPT.</li>
                         <li><strong className="font-semibold">Bảng xếp hạng:</strong> Theo dõi thành tích của bạn và cạnh tranh với các thành viên khác trong các thử thách tuần và xếp hạng nghiên cứu.</li>
                         <li><strong className="font-semibold">Hồ sơ cá nhân:</strong> Quản lý thông tin, xem lại các thành tích, huy hiệu đã đạt được và theo dõi trạng thái các bài báo đã đăng.</li>
                     </ul>
@@ -194,30 +190,34 @@ const Guide: React.FC = () => {
             
             <section id="badges" className="bg-white p-8 rounded-2xl shadow-lg">
                 <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3"><Icon name="medal" className="w-8 h-8 text-amber-500" />3. Hệ thống Huy hiệu</h2>
-                <p className="text-gray-700 mb-6">Huy hiệu là sự ghi nhận cho những nỗ lực và đóng góp của bạn cho cộng đồng SuniMed. Hãy cố gắng sưu tầm tất cả nhé!</p>
-                <div>
-                    <h3 className="text-xl font-semibold text-gray-700 mb-4">Danh hiệu Luyện tập (dựa trên thành tích)</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {practiceBadges.map(badge => <BadgeInfoCard key={badge.name} badge={badge} />)}
-                    </div>
+                <p className="text-gray-700 mb-6">Huy hiệu là sự ghi nhận cho những nỗ lực và đóng góp của bạn cho cộng đồng EdifyX. Hãy cố gắng sưu tầm tất cả nhé!</p>
+                
+                <div className="border-b border-gray-200 mb-6">
+                    <nav className="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
+                        {badgeTabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveBadgeTab(tab.id as any)}
+                                className={`flex-shrink-0 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                                    activeBadgeTab === tab.id
+                                    ? 'border-blue-500 text-blue-600'
+                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                }`}
+                            >
+                            {tab.name}
+                            </button>
+                        ))}
+                    </nav>
                 </div>
-                 <div className="mt-8">
-                    <h3 className="text-xl font-semibold text-gray-700 mb-4">Danh hiệu Nghiên cứu (dựa trên số bài báo được duyệt)</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {researchBadges.map(badge => <BadgeInfoCard key={badge.name} badge={badge} />)}
-                    </div>
-                </div>
-                <div className="mt-8">
-                    <h3 className="text-xl font-semibold text-gray-700 mb-4">Danh hiệu Đặc biệt (do Admin trao tặng)</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {specialBadges.map(badge => <BadgeInfoCard key={badge.name} badge={badge} />)}
-                    </div>
+                
+                <div className="fade-in grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {activeBadges.map(badge => <BadgeInfoCard key={badge.name} badge={badge} />)}
                 </div>
             </section>
 
              <section id="resources" className="bg-white p-8 rounded-2xl shadow-lg">
                 <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3"><Icon name="book" className="w-8 h-8 text-indigo-600" />4. Tài nguyên tham khảo</h2>
-                 <p className="text-gray-700 mb-4">SuniMed tham khảo và khuyến khích sử dụng các nguồn tài liệu y khoa uy tín sau đây cho việc học tập và nghiên cứu:</p>
+                 <p className="text-gray-700 mb-4">EdifyX tham khảo và khuyến khích sử dụng các nguồn tài liệu y khoa uy tín sau đây cho việc học tập và nghiên cứu:</p>
                 <ul className="list-disc list-inside space-y-2 pl-4 columns-1 md:columns-2">
                     {resources.map(res => (
                         <li key={res.name}>

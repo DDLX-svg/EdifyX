@@ -1,7 +1,7 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from './shared/Icon.tsx';
-import AddQuestionForm from './admin/AddQuestionForm.tsx';
 import { useAuth } from '../contexts/AuthContext.tsx';
 import { fetchDocuments, fetchAllQuestions, fetchArticles, updateArticleStatus, updateArticleFeedback } from '../services/googleSheetService.ts';
 import type { DocumentData, AnyQuestion, ScientificArticle } from '../types.ts';
@@ -117,7 +117,6 @@ const FeedbackModal: React.FC<{
 
 const Admin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'documents' | 'questions' | 'articles'>('documents');
-  const [isAddQuestionModalOpen, setIsAddQuestionModalOpen] = useState(false);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const [currentArticleForFeedback, setCurrentArticleForFeedback] = useState<ScientificArticle | null>(null);
   const { currentUser } = useAuth();
@@ -195,11 +194,6 @@ const Admin: React.FC = () => {
     };
     loadData();
   }, []);
-
-  const handleSaveQuestion = (data: any) => {
-    console.log('Saving question:', data);
-    setIsAddQuestionModalOpen(false);
-  };
 
   const handleStatusChange = async (articleId: string, newStatus: string) => {
     const originalArticles = articles;
@@ -437,12 +431,6 @@ const Admin: React.FC = () => {
             >
                 {questionTypes.map(type => <option key={type} value={type}>{type === 'All' ? 'Tất cả các loại' : type}</option>)}
             </select>
-            <button
-                onClick={() => setIsAddQuestionModalOpen(true)}
-                className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
-                >
-                <Icon name="plus" className="w-5 h-5" /> Thêm
-            </button>
         </div>
       </div>
       {questionsLoading ? <p className="text-gray-500">Đang tải câu hỏi...</p>
@@ -627,12 +615,6 @@ const Admin: React.FC = () => {
         </div>
       </div>
       
-      {isAddQuestionModalOpen && (
-        <AddQuestionForm
-          onClose={() => setIsAddQuestionModalOpen(false)}
-          onSave={handleSaveQuestion}
-        />
-      )}
       {isFeedbackModalOpen && currentArticleForFeedback && (
         <FeedbackModal
             article={currentArticleForFeedback}

@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 type IconProps = {
@@ -81,7 +80,7 @@ const icons: { [key: string]: (props: React.SVGProps<SVGSVGElement>) => JSX.Elem
   // New Solid Icons
   backpack: (props) => (
     <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-      <path fillRule="evenodd" d="M8.25 2.25a.75.75 0 01.75.75v.518A2.25 2.25 0 0111.25 6h1.5A2.25 2.25 0 0115 3.518V3a.75.75 0 011.5 0v.518a3.75 3.75 0 01-2.25 3.482V8.25a.75.75 0 01-1.5 0V7.018A2.25 2.25 0 019.75 6h-1.5A2.25 2.25 0 016 3.518V3a.75.75 0 01.75-.75h1.5zm6 0a.75.75 0 01.75.75v.518a2.25 2.25 0 012.25 2.25v12a2.25 2.25 0 01-2.25 2.25h-10.5a2.25 2.25 0 01-2.25-2.25v-12a2.25 2.25 0 012.25-2.25V3a.75.75 0 01.75-.75h1.5zM9 12.75a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zm0 3a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75z" clipRule="evenodd" />
+      <path fillRule="evenodd" d="M8.25 2.25a.75.75 0 01.75.75v.518A2.25 2.25 0 0111.25 6h1.5A2.25 2.25 0 0115 3.518V3a.75.75 0 011.5 0v.518a3.75 3.75 0 01-2.25 3.482V8.25a.75.75 0 01-1.5 0V7.018A2.25 2.25 0 019.75 6h-1.5A2.25 2.25 0 016 3.518V3a.75.75 0 01.75-.75h1.5zm6 0a.75.75 0 01.75.75v.518a2.25 2.25 0 012.25 2.25v12a2.25 2.25 0 01-2.25-2.25h-10.5a2.25 2.25 0 01-2.25-2.25v-12a2.25 2.25 0 012.25-2.25V3a.75.75 0 01.75-.75h1.5zM9 12.75a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zm0 3a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75z" clipRule="evenodd" />
     </svg>
   ),
   swords: (props) => (
@@ -142,6 +141,12 @@ const icons: { [key: string]: (props: React.SVGProps<SVGSVGElement>) => JSX.Elem
   laptop: (props) => (
     <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
       <path d="M4,6H20V16H4M20,18A2,2 0 0,0 22,16V6C22,4.89 21.1,4 20,4H4C2.89,4 2,4.89 2,6V16A2,2 0 0,0 4,18H0V20H24V18H20Z"/>
+    </svg>
+  ),
+  mail: (props) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
+      <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
     </svg>
   ),
   'x-ray': (props) => (
