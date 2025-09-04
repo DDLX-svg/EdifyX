@@ -157,7 +157,7 @@ const WeeklyLeaderboardTab: React.FC = () => {
                 <div>
                     <h2 className="text-3xl font-bold">Thử thách hàng tuần</h2>
                     <p className="mt-2 text-blue-100 max-w-2xl">
-                        Kiểm tra kiến thức của bạn với bộ câu hỏi tổng hợp và leo lên đỉnh bảng xếp hạng tuần này! Mỗi lượt tốn <span className="font-bold">100 tokens</span>.
+                        Kiểm tra kiến thức của bạn với bộ câu hỏi tổng hợp và leo lên đỉnh bảng xếp hạng tuần này! Mỗi lượt chỉ tốn <span className="font-bold">100 tokens</span>.
                     </p>
                 </div>
                 <button
@@ -338,7 +338,7 @@ const Leaderboard: React.FC = () => {
             <section className="text-center">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">Bảng xếp hạng</h1>
                 <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-                    Theo dõi thành tích của bạn và những người khác trong cộng đồng SuniMed.
+                    Theo dõi thành tích của bạn và những người khác trong cộng đồng EdifyX.
                 </p>
             </section>
             
